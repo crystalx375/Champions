@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "champions",
+	"version": "${version}",
+	"name": "Champions",
+	"description": "",
+	"authors": [
+		"Crystal"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "Gplv3",
+	"icon": "assets/champions/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"crystal.champions.Champions"
+		],
+		"client": [
+          "crystal.champions.ChampionsClient"
+		]
+	},
+	"mixins": [
+		"champions.mixins.json",
+		{
+			"config": "champions.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

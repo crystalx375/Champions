@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "crystal.champions.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AdaptiveMixin",
+    "ChampionBossBar",
+    "DampeningMixin",
+    "EntityDataMixin",
+    "KnockingAffix",
+    "MobEntityMixin",
+    "ReflectionMixin",
+    "ShieldingMixin",
+    "ShulkerBulletMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}

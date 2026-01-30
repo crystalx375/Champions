@@ -1,0 +1,30 @@
+package crystal.champions.affix;
+
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.projectile.ShulkerBulletEntity;
+import net.minecraft.util.math.Direction;
+
+import static crystal.champions.config.ChampionsConfig.cooldownBeforeBulletMolten;
+
+public class MoltenAffix extends Affix {
+    public MoltenAffix() {
+        super("molten");
+    }
+    @Override
+    public void onAttack(LivingEntity entity, MobEntity mob) {
+        if (entity.age % cooldownBeforeBulletMolten == 0) {
+            LivingEntity target = mob.getTarget();
+            if (target != null) {
+                ShulkerBulletEntity bullet = new ShulkerBulletEntity(entity.getWorld(), entity, target, Direction.Axis.Y);
+                bullet.setPosition(entity.getX(), entity.getEyeY(), entity.getZ());
+                entity.getWorld().spawnEntity(bullet);
+            }
+        } else if (entity.age % 20 == 0) {
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 40, 0, false, false, false));
+        }
+    }
+}

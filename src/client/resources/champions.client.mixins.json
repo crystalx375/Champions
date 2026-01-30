@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "crystal.champions.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "BossBarsAccessor",
+    "CancelBossBar"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+  ]
+}
