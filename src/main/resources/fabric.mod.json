@@ -19,7 +19,7 @@
 			"crystal.champions.Champions"
 		],
 		"client": [
-          "crystal.champions.ChampionsClient"
+          "crystal.champions.client.ChampionsClient"
 		]
 	},
 	"mixins": [
