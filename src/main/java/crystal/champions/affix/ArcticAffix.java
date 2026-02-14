@@ -1,5 +1,6 @@
 package crystal.champions.affix;
 
+import crystal.champions.Interface.IBullet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.ShulkerBulletEntity;
@@ -17,10 +18,21 @@ public class ArcticAffix extends Affix {
     public void onAttack(LivingEntity entity, MobEntity mob) {
         if (entity.age % cooldownBeforeBulletArtic != 0) return;
         LivingEntity target = mob.getTarget();
-        if (target != null) {
-            ShulkerBulletEntity bullet = new ShulkerBulletEntity(entity.getWorld(), entity, target, Direction.Axis.Y);
-            bullet.setPosition(entity.getX(), entity.getEyeY(), entity.getZ());
-            entity.getWorld().spawnEntity(bullet);
+
+        if (target == null) {
+            target = entity.getWorld().getClosestPlayer(entity.getX(), entity.getY(), entity.getZ(), 30.0, false);
+        }
+
+        if (target != null && target.isAlive()) {
+            ShulkerBulletEntity bullet = new ShulkerBulletEntity(entity.getWorld(), mob, target, Direction.Axis.Y);
+            bullet.setPosition(entity.getX(), entity.getEyeY() + 1, entity.getZ());
+
+            // Working
+            if ((Object)bullet instanceof IBullet i) {
+                i.champions$setArctic(true);
+            }
+
+            mob.getWorld().spawnEntity(bullet);
         }
     }
 }

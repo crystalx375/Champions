@@ -25,7 +25,7 @@ public class ClientPacket {
                     buf.readString(),
                     buf.readFloat(),
                     buf.readFloat(),
-                    System.currentTimeMillis()
+                    buf.readInt()
             );
 
             client.execute(() -> activeChampions.put(uuid, info));

@@ -1,7 +1,7 @@
 package crystal.champions.affix;
 
+import crystal.champions.Interface.IBullet;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -21,6 +21,12 @@ public class MoltenAffix extends Affix {
             if (target != null) {
                 ShulkerBulletEntity bullet = new ShulkerBulletEntity(entity.getWorld(), entity, target, Direction.Axis.Y);
                 bullet.setPosition(entity.getX(), entity.getEyeY(), entity.getZ());
+
+                // Working
+                if ((Object)bullet instanceof IBullet i) {
+                    i.champions$setMolten(true);
+                }
+
                 entity.getWorld().spawnEntity(bullet);
             }
         } else if (entity.age % 20 == 0) {

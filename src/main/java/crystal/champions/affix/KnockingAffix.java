@@ -18,10 +18,8 @@ public class KnockingAffix extends Affix {
         float yaw = champion.getYaw();
         double x = -Math.sin(yaw * 0.017453292F);
         double z = Math.cos(yaw * 0.017453292F);
-
-        target.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 5, 1);
+        
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1));
-        System.out.println(knockback + z + z);
         target.teleport(target.getX(), target.getY() + 0.1, + target.getZ());
         target.addVelocity(knockback * x, knockback * 0.3, knockback * z);
         target.velocityModified = true;

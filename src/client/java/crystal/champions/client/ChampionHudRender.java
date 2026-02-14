@@ -5,7 +5,6 @@ import crystal.champions.client.net.ClientPacket;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -114,7 +113,7 @@ public class ChampionHudRender implements HudRenderCallback {
         for (String s : split) {
             String t = s.trim();
             if (t.isEmpty()) continue;
-            String translate = I18n.translate(t.startsWith("affix.") ? t : "affix." + t.toLowerCase());
+            MutableText translate = Text.translatable(t.startsWith("affix.") ? t : "affix." + t);
             if (!processed.isEmpty()) processed.append(" • ");
             processed.append(translate);
         }
@@ -123,16 +122,21 @@ public class ChampionHudRender implements HudRenderCallback {
     private int getColor(int tier) {
         try {
             return switch (tier) {
-                case 1 -> 0xFFFF55;
+                case 1 -> 0xffff55;
                 case 2 -> 0xf57c2c;
                 case 3 -> 0x46dffa;
                 case 4 -> 0x8823db;
                 default -> 0xf98aff;
             };
         } catch (Exception e) {
-            return 0xFFFFFF;
+            return 0xffffff;
         }
     }
-
-    private record ChampionData(Text name, int tier, String affixes, float percent, int color) {}
+    private record ChampionData(
+            Text name,
+            int tier,
+            String affixes,
+            float percent,
+            int color
+    ) {}
 }

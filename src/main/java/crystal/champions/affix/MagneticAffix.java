@@ -2,6 +2,7 @@ package crystal.champions.affix;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 
 public class MagneticAffix extends Affix {
