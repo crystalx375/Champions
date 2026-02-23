@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "crystal.champions.mixin.affixes",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AdaptiveMixin",
+    "DampeningMixin",
+    "KnockingAffix",
+    "ReflectionMixin",
+    "ShieldingMixin",
+    "ShulkerBulletMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

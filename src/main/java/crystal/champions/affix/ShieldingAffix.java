@@ -5,6 +5,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 
+import static crystal.champions.config.ChampionsConfig.shieldAllTime;
+import static crystal.champions.config.ChampionsConfig.shieldWork;
+
+/**
+ * ShieldingAffix
+ * В миксине отменяем урон раз в некоторое кол-во времени
+ */
 public class ShieldingAffix extends Affix {
 
     public ShieldingAffix() {
@@ -18,7 +25,7 @@ public class ShieldingAffix extends Affix {
         IChampions champion = (IChampions) entity;
         long time = entity.getWorld().getTime();
 
-        boolean Shield = (time % 200) < 100;
+        boolean Shield = (time % shieldAllTime) < shieldWork;
 
         if (champion.champions$isShielding() != Shield) {
             champion.champions$setShielding(Shield);

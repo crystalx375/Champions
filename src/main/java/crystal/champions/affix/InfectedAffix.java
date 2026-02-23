@@ -6,13 +6,16 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.SilverfishEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
 
 import java.util.List;
 
 import static crystal.champions.config.ChampionsConfig.*;
 
+/**
+ * InfectedAffix
+ * Создаем чешуйниц от хп моба
+ * При большом кол-ве отменяем спавн
+ */
 public class InfectedAffix extends Affix {
 
     public InfectedAffix() {
@@ -23,7 +26,7 @@ public class InfectedAffix extends Affix {
     public void onTick(LivingEntity entity) {
         if (entity.age % timeBeforeInfected != 0) return;
         ServerWorld world = (ServerWorld) entity.getWorld();
-        List<SilverfishEntity> nearby = world.getEntitiesByClass(SilverfishEntity.class, entity.getBoundingBox().expand(16.0), e -> true);
+        List<SilverfishEntity> nearby = world.getEntitiesByClass(SilverfishEntity.class, entity.getBoundingBox().expand(40.0), e -> true);
         if (nearby.size() > maxSilverFishCount) return;
 
         BlockPos pos = entity.getBlockPos();

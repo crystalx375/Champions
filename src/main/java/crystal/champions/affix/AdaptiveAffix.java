@@ -8,7 +8,12 @@ import net.minecraft.registry.RegistryKey;
 
 import java.util.Optional;
 
+/**
+ * Адаптивный аффикс
+ * Сравниваем damage source и если совпадает, то уменьшаем урон, если нет то сбрасываем
+ */
 public class AdaptiveAffix extends Affix {
+
     public AdaptiveAffix() {
         super("adaptive");
     }

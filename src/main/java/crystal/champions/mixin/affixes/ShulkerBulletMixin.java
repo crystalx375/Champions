@@ -1,4 +1,4 @@
-package crystal.champions.mixin;
+package crystal.champions.mixin.affixes;
 
 import crystal.champions.Interface.IBullet;
 import net.minecraft.entity.Entity;
@@ -17,15 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ShulkerBulletEntity.class)
 public abstract class ShulkerBulletMixin implements IBullet {
     /**
-     * Инжектим в буллет шалкера и добавляем свои проверки
-     *                 if (affixes.contains("arctic")) {
-     *                     target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5));
-     *                     ci.cancel();
-     *                 }
-     *                 if (affixes.contains("molten")) {
-     *                     target.setOnFireFor(100);
-     *                     ci.cancel();
-     *                 }
+     * Инжектим в буллет шалкера и добавляем свои проверки в хит
+     *         if (this.isArctic) {
+     *             target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5));
+     *             ci.cancel();
+     *         }
+     *         if (this.isMolten) {
+     *             target.setOnFireFor(40);
+     *             ci.cancel();
+     *         }
      */
     @Unique private boolean isArctic = false;
     @Unique private boolean isMolten = false;

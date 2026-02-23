@@ -3,8 +3,6 @@ package crystal.champions.mixin;
 import crystal.champions.Interface.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
-import crystal.champions.net.ChampionsNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -14,15 +12,10 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,13 +28,6 @@ import java.util.Objects;
 
 @Mixin(LivingEntity.class)
 public abstract class EntityDataMixin extends Entity implements IChampions {
-    @Shadow
-    public Hand preferredHand;
-
-    @Shadow
-    @Final
-    public static float BABY_SCALE_FACTOR;
-
     /**
      * Записываем сюда все данные для их использования в чемпионах
      * По названию и так понятно я думаю

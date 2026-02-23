@@ -8,5 +8,6 @@ public record ChampionDisplayInfo(
         String affixes,
         float health,
         float maxHealth,
-        long lastUpdate
+        long lastUpdate,
+        long lastUpdateClient
 ) {}

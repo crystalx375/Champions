@@ -3,10 +3,13 @@ package crystal.champions.affix;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.sound.SoundEvents;
 
 import static crystal.champions.config.ChampionsConfig.knockback;
 
+/**
+ * KnockingAffix
+ * Откидываем игрока
+ */
 public class KnockingAffix extends Affix {
 
     public KnockingAffix() {

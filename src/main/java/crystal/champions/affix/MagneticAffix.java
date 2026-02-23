@@ -2,9 +2,15 @@ package crystal.champions.affix;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 
+import static crystal.champions.config.ChampionsConfig.strength;
+
+/**
+ * MagneticAffix
+ * Из интересно здесь именно через set надо target.setVelocity(pX, pY, pZ);
+ * Без него не будет как в оригинальном моде
+ */
 public class MagneticAffix extends Affix {
     public MagneticAffix() {
         super("magnetic");
@@ -16,10 +22,10 @@ public class MagneticAffix extends Affix {
         LivingEntity target = mob.getTarget();
         if (target != null) {
             Vec3d pullDir = entity.getPos().subtract(target.getPos()).normalize();
-            double strength = 0.01;
-            float pX = (float) (pullDir.x * strength + target.getVelocity().x * 0.6);
-            float pY = (float) (pullDir.y * strength + target.getVelocity().y * 0.4);
-            float pZ = (float) (pullDir.z * strength + target.getVelocity().z * 0.6);
+            double i = 0.01 * strength;
+            float pX = (float) (pullDir.x * i + target.getVelocity().x * 0.6);
+            float pY = (float) (pullDir.y * i + target.getVelocity().y * 0.4);
+            float pZ = (float) (pullDir.z * i + target.getVelocity().z * 0.6);
             target.setVelocity(pX, pY, pZ);
 
             target.velocityModified = true;

@@ -1,4 +1,4 @@
-package crystal.champions.mixin;
+package crystal.champions.mixin.affixes;
 
 import crystal.champions.Interface.IChampions;
 import net.minecraft.entity.LivingEntity;
@@ -10,7 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+
+
 import java.util.Random;
+
+import static crystal.champions.config.ChampionsConfig.reflectionDamage;
 
 @Mixin(LivingEntity.class)
 public class ReflectionMixin {
@@ -24,7 +28,7 @@ public class ReflectionMixin {
         if ((Object)this instanceof IChampions champion && champion.champions$getAffixesString().contains("reflection")) {
             if (source.getAttacker() instanceof LivingEntity attacker) {
                 if (source.getAttacker() == null) return;
-                attacker.damage(attacker.getWorld().getDamageSources().magic(), 2.0f);
+                attacker.damage(attacker.getWorld().getDamageSources().thorns(source.getSource()), reflectionDamage);
                 Random rnd = new Random();
                 double random = rnd.nextDouble(-0.15, 0.15);
                 final double x = attacker.getVelocity().x + random;

@@ -19,27 +19,44 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+/**
+ * Боссбар на сервере / клиенте
+ * Если сервер то рендерим тут
+ * Если клиент отправляем пакеты с данными
+ */
 @Mixin(MobEntity.class)
-public abstract class ChampionBossBar extends LivingEntity implements IChampions {
+public abstract class ServerChampionsBar extends LivingEntity implements IChampions {
     @Unique private final Map<UUID, ServerBossBar> healthBars = new HashMap<>();
     @Unique private final Map<UUID, ServerBossBar> affixBars = new HashMap<>();
     @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
-    protected ChampionBossBar(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
+    protected ServerChampionsBar(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
         super(type, world);
     }
 
+    /**
+     * Различные боксы для сервера и псевдо-клиентские (клиент)
+     * Хз как назвать так что так называются
+     * --------------------------------------------------------------------------------
+     * Сделал так, чтобы отправлял разные пакеты, и с ними уже можно делать хоть что-то
+     * При наведении чтобы можно было видеть дальше
+     */
     @Inject(method = "tick", at = @At("TAIL"))
     private void manageChampionHud(CallbackInfo ci) {
         if (this.getWorld().isClient || this.champions$getChampionTier() <= 0) return;
 
+        List<ServerPlayerEntity> nearbyClient = this.getWorld().getEntitiesByClass(
+                ServerPlayerEntity.class, this.getBoundingBox().expand(40.0), p -> true
+        );
         List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
-                ServerPlayerEntity.class, this.getBoundingBox().expand(25.0), p -> true
+                ServerPlayerEntity.class, this.getBoundingBox().expand(10.0), p -> true
         );
 
         Set<UUID> currentIds = new HashSet<>();
-        for (ServerPlayerEntity player : nearby) {
-            assert ChampionsNetworking.CHAMPION_UPDATE_PACKET != null;
+
+        // Клиентские пакеты
+        for (ServerPlayerEntity player : nearbyClient) {
+            assert ChampionsNetworking.CHAMPION_UPDATE_CLIENT_PACKET != null;
             UUID pUuid = player.getUuid();
             currentIds.add(pUuid);
             if (!isBestChampionForPlayer(player)) {
@@ -47,17 +64,35 @@ public abstract class ChampionBossBar extends LivingEntity implements IChampions
                 continue;
             }
 
-            if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_PACKET)) {
-                ChampionsNetworking.sendUpdate(player, (MobEntity)(Object)this, champions$getChampionTier(), champions$getAffixesString());
+            if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_CLIENT_PACKET)) {
+                ChampionsNetworking.sendUpdateC(player, (MobEntity) (Object) this, champions$getChampionTier(), champions$getAffixesString());
                 removeAllBars(player);
-                trackedPlayerIds.add(pUuid);
-            } else {
-                updateHealth(player);
-                updateAffixes(player);
                 trackedPlayerIds.add(pUuid);
             }
         }
-        // remove
+        // Серверные пакеты
+        // Если не можем отправить, рендерим на сервере
+        for (ServerPlayerEntity player : nearby) {
+            UUID uuid = player.getUuid();
+            assert ChampionsNetworking.CHAMPION_UPDATE_PACKET != null;
+
+            if (!isBestChampionForPlayer(player)) {
+                removeAllBars(player);
+                continue;
+            }
+
+            if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_PACKET)) {
+                ChampionsNetworking.sendUpdateS(player, (MobEntity) (Object) this, champions$getChampionTier(), champions$getAffixesString());
+                trackedPlayerIds.add(uuid);
+            } else {
+                // Бары на сервере
+                updateHealth(player);
+                updateAffixes(player);
+                trackedPlayerIds.add(uuid);
+            }
+        }
+
+        // remover
         Iterator<UUID> it = trackedPlayerIds.iterator();
         while (it.hasNext()) {
             UUID id = it.next();
@@ -75,7 +110,7 @@ public abstract class ChampionBossBar extends LivingEntity implements IChampions
     @Unique
     private boolean isBestChampionForPlayer(ServerPlayerEntity player) {
         List<MobEntity> champions = player.getWorld().getEntitiesByClass(
-                MobEntity.class, player.getBoundingBox().expand(25.0),
+                MobEntity.class, player.getBoundingBox().expand(20.0),
                 e -> e instanceof IChampions && ((IChampions)e).champions$getChampionTier() > 0
         );
 
@@ -86,6 +121,11 @@ public abstract class ChampionBossBar extends LivingEntity implements IChampions
                 ((IChampions) mobEntity).champions$getChampionTier() <= this.champions$getChampionTier()).orElse(true);
     }
 
+    /**
+     * Полностью сервер сайд логика
+     * Рендерим и обновляем боссбар с хп
+     * @param player на кого именно рендер
+     */
     @Unique
     private void updateHealth(ServerPlayerEntity player) {
         int tier = this.champions$getChampionTier();
@@ -115,9 +155,15 @@ public abstract class ChampionBossBar extends LivingEntity implements IChampions
         });
 
         String affixesStr = champions$getAffixesString();
-        bar.setName(Text.literal(affixesStr != null ? affixesStr : "").formatted(Formatting.GRAY, Formatting.ITALIC));
+        bar.setName(Text.literal(affixesStr != null ? affixesStr : " ").formatted(Formatting.GRAY, Formatting.ITALIC));
         bar.setColor(BossBar.Color.WHITE);
     }
+
+    /**
+     * Removers
+     * Подчищаем и удаляем все тут с баров
+     * Ну и сами бары
+     */
     @Unique
     private void removeIt() {
         healthBars.values().forEach(ServerBossBar::clearPlayers);
@@ -127,12 +173,12 @@ public abstract class ChampionBossBar extends LivingEntity implements IChampions
 
         if (this.getWorld().getServer() == null) return;
 
-        // Итерируемся по копии trackedPlayerIds
         Set<UUID> idsCopy = new HashSet<>(trackedPlayerIds);
         for (UUID id : idsCopy) {
             ServerPlayerEntity player = this.getWorld().getServer().getPlayerManager().getPlayer(id);
-            if (player != null) {
-                ChampionsNetworking.sendRemove(player, (MobEntity)(Object)this);
+            MobEntity mob = (MobEntity) (Object) this;
+            if (player != null && mob.isDead()) {
+                ChampionsNetworking.sendRemove(player, mob);
             }
         }
         trackedPlayerIds.clear();

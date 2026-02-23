@@ -7,11 +7,12 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.world.World;
 
 import static crystal.champions.config.ChampionsConfig.*;
-
+/**
+ * PlaguedAffix
+ * Здесь мы на моба ставим туманное зелье на отравление и все
+ */
 public class PlaguedAffix extends Affix {
-    /**
-     * Здесь мы на моба ставим сплэш зелье на отравление и все
-     */
+
     public PlaguedAffix() {
         super("plagued");
     }
@@ -24,7 +25,7 @@ public class PlaguedAffix extends Affix {
         cloud.setRadius(3.0f);
         cloud.setWaitTime(0);
         cloud.setDuration(10);
-        StatusEffectInstance plagued = new StatusEffectInstance(StatusEffects.POISON, poisonDuration, plaguedAmplifier);
+        StatusEffectInstance plagued = new StatusEffectInstance(StatusEffects.POISON, poisonDuration, poisonAmplifier);
         cloud.addEffect(plagued);
         world.spawnEntity(cloud);
         entity.removeStatusEffect(StatusEffects.POISON);

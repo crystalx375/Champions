@@ -10,17 +10,24 @@ import net.minecraft.util.math.Direction;
 
 import static crystal.champions.config.ChampionsConfig.cooldownBeforeBulletMolten;
 
+/**
+ * Создаем bullet, и суем в него нбт
+ * Я объединил molten и enkindling
+ * ShulkerBulletEntity
+ */
 public class MoltenAffix extends Affix {
+
     public MoltenAffix() {
         super("molten");
     }
+
     @Override
     public void onAttack(LivingEntity entity, MobEntity mob) {
         if (entity.age % cooldownBeforeBulletMolten == 0) {
             LivingEntity target = mob.getTarget();
             if (target != null) {
                 ShulkerBulletEntity bullet = new ShulkerBulletEntity(entity.getWorld(), entity, target, Direction.Axis.Y);
-                bullet.setPosition(entity.getX(), entity.getEyeY(), entity.getZ());
+                bullet.setPosition(entity.getX(), entity.getEyeY() + 0.5, entity.getZ());
 
                 // Working
                 if ((Object)bullet instanceof IBullet i) {

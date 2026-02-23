@@ -1,6 +1,5 @@
 package crystal.champions.mixin;
 
-import crystal.champions.Champions;
 import crystal.champions.Interface.IChampions;
 import crystal.champions.affix.AffixRegistry;
 import crystal.champions.rank.ChampionRank;
@@ -10,10 +9,12 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.mob.*;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.PolarBearEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static crystal.champions.config.ChampionsConfig.maxBossTier;
+
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin implements IChampions {
@@ -34,39 +37,68 @@ public abstract class MobEntityMixin implements IChampions {
     @Inject(method = "initialize", at = @At("TAIL"))
     private void applyChampionStats(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
                                     EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
-        MobEntity entity = (MobEntity) (Object) this;
-        boolean isAggressive = entity instanceof HostileEntity || entity instanceof Angerable;
+        MobEntity mob = (MobEntity) (Object) this;
 
-        if (!isAggressive) return;
-        ChampionRank rank = ChampionRank.getRandomRank(entity.getRandom());
+        boolean isAggressive = mob instanceof HostileEntity || mob instanceof Angerable
+                || mob instanceof CaveSpiderEntity || mob instanceof GhastEntity
+                || mob instanceof PhantomEntity || mob instanceof ShulkerEntity
+                || mob instanceof SilverfishEntity || mob instanceof SlimeEntity
+                || mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+
+        boolean notAggressive = mob instanceof IronGolemEntity
+                || mob instanceof PolarBearEntity || mob instanceof WolfEntity;
+
+        boolean Bosses = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+
+        if (!isAggressive || notAggressive) return;
+
+        ChampionRank rank = ChampionRank.getRandomRank(mob.getRandom());
         if (rank.tier() > 0) {
-            if (entity instanceof SilverfishEntity) return;
-            champions$setChampionTier(rank.tier());
-            List<String> pool = new ArrayList<>(AffixRegistry.ALL_AFFIXES.keySet());
-            Collections.shuffle(pool);
-            int count = Math.min(rank.affixes(), pool.size());
-            List<String> selected = pool.subList(0, count);
-
-            String result = String.join(",", selected);
-            champions$setAffixesString(result);
-            float multiplier = rank.growth();
-            modifyAttribute(entity, EntityAttributes.GENERIC_MAX_HEALTH, multiplier);
-            entity.setHealth(entity.getMaxHealth());
-            if (entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
-                modifyAttribute(entity, EntityAttributes.GENERIC_ATTACK_DAMAGE, multiplier);
+            if (!Bosses) {
+                champions$setChampionTier(rank.tier());
+            } else {
+                System.out.println("CHAMPION" + mob);
+                int tier = rank.tier();
+                if (tier > maxBossTier) tier = maxBossTier;
+                champions$setChampionTier(tier);
             }
+            prepareAttributes(mob, rank);
+            prepareAffixes(rank);
+        }
+    }
 
-            Champions.LOGGER.info("Spawned champion tier {} with affixes: {}", rank.tier(), result);
+
+    @Unique
+    private void prepareAttributes(MobEntity mob, ChampionRank rank) {
+        float mult = rank.growth();
+        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, mult);
+        mob.setHealth(mob.getMaxHealth());
+
+        if (mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
+            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, mult);
         }
     }
 
     @Unique
-    private void modifyAttribute(MobEntity entity, EntityAttribute attribute, float multiplier) {
+    private void prepareAffixes(ChampionRank rank) {
+        List<String> pool = new ArrayList<>(AffixRegistry.ALL_AFFIXES.keySet());
+        Collections.shuffle(pool);
+
+        int count = Math.min(rank.affixes(), pool.size());
+
+        List<String> selected = pool.subList(0, count);
+        String result = String.join(",", selected);
+
+        champions$setAffixesString(result);
+    }
+
+    @Unique
+    private void modifyAttribute(MobEntity entity, EntityAttribute attribute, float m) {
         EntityAttributeInstance instance = entity.getAttributeInstance(attribute);
         if (instance != null) {
             instance.addPersistentModifier(new EntityAttributeModifier(
                     "champion_modifier",
-                    multiplier - 1.0,
+                    m - 1.0,
                     EntityAttributeModifier.Operation.MULTIPLY_BASE
             ));
         }

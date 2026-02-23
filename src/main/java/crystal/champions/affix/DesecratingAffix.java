@@ -5,11 +5,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
 import static crystal.champions.config.ChampionsConfig.*;
 
+/**
+ * DesecratingAffix
+ * Создаем туманное зелие на blockpos target
+ */
 public class DesecratingAffix extends Affix {
 
     public DesecratingAffix() {
@@ -25,7 +28,7 @@ public class DesecratingAffix extends Affix {
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, target.getX(), target.getY(), target.getZ());
         cloud.setRadius(3.0f);
         cloud.setWaitTime(10);
-        cloud.setDuration(desecratingDuration);
+        cloud.setDuration(cloudDuration);
         StatusEffectInstance desecrating = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 10, 1);
         cloud.addEffect(desecrating);
 

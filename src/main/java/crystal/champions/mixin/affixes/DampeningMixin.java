@@ -1,4 +1,4 @@
-package crystal.champions.mixin;
+package crystal.champions.mixin.affixes;
 
 import crystal.champions.Interface.IChampions;
 import net.minecraft.entity.LivingEntity;
@@ -7,6 +7,8 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import static crystal.champions.config.ChampionsConfig.dampeningAmount;
 
 @Mixin(LivingEntity.class)
 public class DampeningMixin {
@@ -19,7 +21,7 @@ public class DampeningMixin {
     @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
     private float applyDampening(float amount, DamageSource source) {
         if ((Object)this instanceof IChampions champion && champion.champions$getAffixesString().contains("dampening")) {
-            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) || !source.isIn(DamageTypeTags.IS_FIRE)) return amount * 0.5f;
+            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) || !source.isIn(DamageTypeTags.IS_FIRE)) return amount * dampeningAmount;
         }
         return amount;
     }

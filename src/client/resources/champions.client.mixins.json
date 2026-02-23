@@ -1,9 +1,8 @@
 {
   "required": true,
-  "package": "crystal.champions.client.mixin",
+  "package": "",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "BossBarsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

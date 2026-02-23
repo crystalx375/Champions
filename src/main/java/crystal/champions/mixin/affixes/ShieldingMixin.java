@@ -1,4 +1,4 @@
-package crystal.champions.mixin;
+package crystal.champions.mixin.affixes;
 
 import crystal.champions.Interface.IChampions;
 import net.minecraft.entity.LivingEntity;
