@@ -43,7 +43,7 @@ public class ChampionsConfig {
     private ChampionsConfig() {
         SimpleConfig CONFIG = SimpleConfig.of("champions_common")
                 .provider(this::defaultConfig)
-                .version(1)
+                .version(2)
                 .request();
 
         cooldownBeforeBulletArtic = CONFIG.getOrDefault("cooldown_arctic", 160);

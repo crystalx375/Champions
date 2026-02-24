@@ -1,14 +1,12 @@
 package crystal.champions.affix;
 
 import crystal.champions.Interface.IBullet;
-import crystal.champions.config.ChampionsConfig;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.util.math.Direction;
 
 import static crystal.champions.config.ChampionsConfig.cooldownBeforeBulletArtic;
-import static crystal.champions.config.ChampionsConfig.get;
 
 /**
  * Создаем bullet, и суем в него нбт
@@ -19,7 +17,6 @@ public class ArcticAffix extends Affix {
     public ArcticAffix() {
         super("arctic");
     }
-    ChampionsConfig cfg = get();
 
     @Override
     public void onAttack(LivingEntity entity, MobEntity mob) {

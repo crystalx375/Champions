@@ -54,7 +54,7 @@ public class SimpleConfig {
         private final File file;
         private final String filename;
         private DefaultConfig provider;
-        private int version = 1;
+        private int version;
 
         private ConfigRequest(File file, String filename ) {
             this.file = file;
@@ -144,12 +144,12 @@ public class SimpleConfig {
         this.request = request;
         String identifier = "Config '" + request.filename + "'";
 
-        if ( request.file.exists() && isOutdated() ) {
+        if (request.file.exists() && isOutdated() ) {
             LOGGER.warn( identifier + " is outdated, backing up and regenerating..." );
-            backupAndRemove();
+            Remove();
         }
 
-        if( !request.file.exists() ) {
+        if(!request.file.exists() ) {
             LOGGER.info( identifier + " is missing, generating default one..." );
 
             try {
@@ -161,7 +161,7 @@ public class SimpleConfig {
             }
         }
 
-        if( !broken ) {
+        if(!broken) {
             try {
                 loadConfig();
             } catch (Exception e) {
@@ -264,7 +264,7 @@ public class SimpleConfig {
      * @author Crystal
      * Recreate File and create outdated file
      */
-    private void backupAndRemove() {
+    private void Remove() {
         File backup = new File(request.file.getPath() + ".old");
         if (backup.exists()) backup.delete();
         request.file.renameTo(backup);
@@ -276,11 +276,12 @@ public class SimpleConfig {
      */
     private boolean isOutdated() {
         try (Scanner reader = new Scanner(request.file)) {
-            if (reader.hasNextLine()) {
+            while (reader.hasNextLine()) {
                 String s = reader.nextLine();
+                if (s.isEmpty() || (s.startsWith("#") && !s.contains("version"))) continue;
                 if (s.startsWith("version = ")) {
                     int v = Integer.parseInt(s.split("=")[1].trim());
-                    return v < request.version;
+                    return v != request.version;
                 }
             }
         } catch (Exception e) {

@@ -12,6 +12,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,6 +27,9 @@ import java.util.*;
  */
 @Mixin(MobEntity.class)
 public abstract class ServerChampionsBar extends LivingEntity implements IChampions {
+    @Shadow
+    protected abstract void removeFromDimension();
+
     @Unique private final Map<UUID, ServerBossBar> healthBars = new HashMap<>();
     @Unique private final Map<UUID, ServerBossBar> affixBars = new HashMap<>();
     @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
@@ -45,50 +49,35 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
     private void manageChampionHud(CallbackInfo ci) {
         if (this.getWorld().isClient || this.champions$getChampionTier() <= 0) return;
 
-        List<ServerPlayerEntity> nearbyClient = this.getWorld().getEntitiesByClass(
-                ServerPlayerEntity.class, this.getBoundingBox().expand(40.0), p -> true
-        );
         List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
-                ServerPlayerEntity.class, this.getBoundingBox().expand(10.0), p -> true
+                ServerPlayerEntity.class, this.getBoundingBox().expand(40.0), p -> true
         );
 
         Set<UUID> currentIds = new HashSet<>();
 
-        // Клиентские пакеты
-        for (ServerPlayerEntity player : nearbyClient) {
-            assert ChampionsNetworking.CHAMPION_UPDATE_CLIENT_PACKET != null;
-            UUID pUuid = player.getUuid();
-            currentIds.add(pUuid);
-            if (!isBestChampionForPlayer(player)) {
-                removeAllBars(player);
-                continue;
-            }
+        MobEntity mob = (MobEntity) (Object) this;
 
-            if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_CLIENT_PACKET)) {
-                ChampionsNetworking.sendUpdateC(player, (MobEntity) (Object) this, champions$getChampionTier(), champions$getAffixesString());
-                removeAllBars(player);
-                trackedPlayerIds.add(pUuid);
-            }
-        }
-        // Серверные пакеты
-        // Если не можем отправить, рендерим на сервере
         for (ServerPlayerEntity player : nearby) {
             UUID uuid = player.getUuid();
+            double distance = player.squaredDistanceTo(this);
+
             assert ChampionsNetworking.CHAMPION_UPDATE_PACKET != null;
-
-            if (!isBestChampionForPlayer(player)) {
-                removeAllBars(player);
-                continue;
-            }
-
             if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_PACKET)) {
-                ChampionsNetworking.sendUpdateS(player, (MobEntity) (Object) this, champions$getChampionTier(), champions$getAffixesString());
-                trackedPlayerIds.add(uuid);
-            } else {
-                // Бары на сервере
-                updateHealth(player);
-                updateAffixes(player);
-                trackedPlayerIds.add(uuid);
+                if (distance <= 225.0) {
+                    ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                    trackedPlayerIds.add(uuid);
+                    currentIds.add(uuid);
+                }
+                ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
+            } else if (distance <= 225.0) {
+                if (isBestChampionForPlayer(player)) {
+                    updateHealth(player);
+                    updateAffixes(player);
+                    trackedPlayerIds.add(uuid);
+                    currentIds.add(uuid);
+                } else {
+                    removeAllBars(player);
+                }
             }
         }
 
@@ -97,10 +86,14 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
         while (it.hasNext()) {
             UUID id = it.next();
             if (!currentIds.contains(id)) {
-                ServerPlayerEntity player = (ServerPlayerEntity) this.getWorld().getPlayerByUuid(id);
-                if (player != null) {
-                    ChampionsNetworking.sendRemove(player, (MobEntity)(Object)this);
-                    removeAllBars(player);
+                try {
+                    ServerPlayerEntity player = Objects.requireNonNull(this.getWorld().getServer()).getPlayerManager().getPlayer(id);
+                    if (player != null) {
+                        ChampionsNetworking.sendRemove(player, mob);
+                        removeAllBars(player);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
                 it.remove();
             }
@@ -110,7 +103,7 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
     @Unique
     private boolean isBestChampionForPlayer(ServerPlayerEntity player) {
         List<MobEntity> champions = player.getWorld().getEntitiesByClass(
-                MobEntity.class, player.getBoundingBox().expand(20.0),
+                MobEntity.class, player.getBoundingBox().expand(15.0),
                 e -> e instanceof IChampions && ((IChampions)e).champions$getChampionTier() > 0
         );
 
@@ -152,7 +145,7 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
             ServerBossBar b = new ServerBossBar(Text.empty(), BossBar.Color.WHITE, BossBar.Style.NOTCHED_20);
             b.addPlayer(player);
             return b;
-        });
+    });
 
         String affixesStr = champions$getAffixesString();
         bar.setName(Text.literal(affixesStr != null ? affixesStr : " ").formatted(Formatting.GRAY, Formatting.ITALIC));
@@ -173,8 +166,8 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
 
         if (this.getWorld().getServer() == null) return;
 
-        Set<UUID> idsCopy = new HashSet<>(trackedPlayerIds);
-        for (UUID id : idsCopy) {
+        Set<UUID> ids= new HashSet<>(trackedPlayerIds);
+        for (UUID id : ids) {
             ServerPlayerEntity player = this.getWorld().getServer().getPlayerManager().getPlayer(id);
             MobEntity mob = (MobEntity) (Object) this;
             if (player != null && mob.isDead()) {

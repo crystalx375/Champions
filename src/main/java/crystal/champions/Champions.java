@@ -1,5 +1,6 @@
 package crystal.champions;
 
+import crystal.champions.config.ChampionsConfig;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -11,5 +12,6 @@ public class Champions implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Loading champions...");
+        ChampionsConfig.get();
 	}
 }

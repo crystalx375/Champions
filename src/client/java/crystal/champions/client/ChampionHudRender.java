@@ -1,7 +1,6 @@
 package crystal.champions.client;
 
 import crystal.champions.client.net.ChampionDisplayInfo;
-import crystal.champions.client.net.ClientPacket;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -15,6 +14,8 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Map;
 import java.util.UUID;
 
+import static crystal.champions.client.net.ClientPacket.activeChampions;
+import static crystal.champions.client.net.ClientPacket.activeChampionsCl;
 import static crystal.champions.client.render.ChampionsColor.getColor;
 import static crystal.champions.client.render.ChampionsRender.renderChampion;
 
@@ -49,16 +50,19 @@ public class ChampionHudRender implements HudRenderCallback {
         long now = System.currentTimeMillis();
         ClientLook at = performFarRaycast(client, delta, 40.0);
 
-        if (at != null && at.check() && ClientPacket.activeChampionsCl.containsKey(at.uuid())) {
+        if (at != null && at.check() && activeChampionsCl.containsKey(at.uuid())) {
             targetUuid = at.uuid();
             lastUpdateAt = now;
         }
 
         if (targetUuid != null) {
-            ChampionDisplayInfo info = ClientPacket.activeChampionsCl.get(targetUuid);
+            ChampionDisplayInfo info = activeChampionsCl.get(targetUuid);
             if (info != null && (now - lastUpdateAt < 1000) && info.health() > 0) {
                 return dataWrite(info);
-            } else { targetUuid = null; }
+            } else {
+                activeChampionsCl.remove(targetUuid);
+                targetUuid = null;
+            }
         }
         return null;
     }
@@ -67,11 +71,11 @@ public class ChampionHudRender implements HudRenderCallback {
         ChampionData best = null;
         long now = System.currentTimeMillis();
 
-        for (Map.Entry<UUID, ChampionDisplayInfo> entry : ClientPacket.activeChampions.entrySet()) {
+        for (Map.Entry<UUID, ChampionDisplayInfo> entry : activeChampions.entrySet()) {
             ChampionDisplayInfo info = entry.getValue();
 
-            if (now - info.lastUpdate() > 5000 || (now - info.lastUpdate() > 200 && info.health() <= 0)) {
-                ClientPacket.activeChampions.remove(entry.getKey());
+            if (now - info.lastUpdate() > 5000 || (now - info.lastUpdate() > 100 && info.health() <= 0)) {
+                activeChampions.remove(entry.getKey());
                 continue;
             }
 

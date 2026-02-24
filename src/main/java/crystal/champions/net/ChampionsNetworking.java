@@ -43,10 +43,10 @@ public class ChampionsNetworking {
         if (CHAMPION_UPDATE_CLIENT_PACKET != null) ServerPlayNetworking.send(player, CHAMPION_UPDATE_CLIENT_PACKET, bufcl);
     }
 
-    public static void sendRemove(ServerPlayerEntity player, MobEntity entity) {
+    public static void sendRemove(ServerPlayerEntity player, MobEntity mob) {
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(entity.getUuid());
+        buf.writeUuid(mob.getUuid());
 
         if (CHAMPION_REMOVE_PACKET != null) ServerPlayNetworking.send(player, CHAMPION_REMOVE_PACKET, buf);
     }

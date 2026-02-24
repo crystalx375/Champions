@@ -17,6 +17,7 @@ public class ClientPacket {
      * Регистрация
      */
     public static void registerPackets() {
+
         assert CHAMPION_UPDATE_PACKET != null;
         ClientPlayNetworking.registerGlobalReceiver(CHAMPION_UPDATE_PACKET, (client, handler, buf, responseSender) -> {
             ServerBuf(buf, client);
@@ -31,7 +32,6 @@ public class ClientPacket {
         ClientPlayNetworking.registerGlobalReceiver(CHAMPION_REMOVE_PACKET, (client, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
             client.execute(() -> activeChampions.remove(uuid));
-            client.execute(() -> activeChampionsCl.remove(uuid));
         });
     }
 
