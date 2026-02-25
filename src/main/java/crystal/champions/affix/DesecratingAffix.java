@@ -7,7 +7,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
 
-import static crystal.champions.config.ChampionsConfig.*;
+import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * DesecratingAffix

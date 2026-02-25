@@ -1,5 +1,8 @@
 package crystal.champions.affix;
 
+import crystal.champions.Champions;
+import crystal.champions.config.ChampionsConfigAffixes;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,22 +13,25 @@ public class AffixRegistry {
 
     public static final Map<String, Affix> ALL_AFFIXES = new HashMap<>();
 
-    private static final Affix HASTY = register(new HastyAffix());
-    private static final Affix ARCTIC = register(new ArcticAffix());
-    private static final Affix MOLTEN = register(new MoltenAffix());
-    private static final Affix DESECRATING = register(new DesecratingAffix());
-    private static final Affix PLAGUED = register(new PlaguedAffix());
-    private static final Affix INFECTED = register(new InfectedAffix());
-    private static final Affix ADAPTIVE = register(new AdaptiveAffix());
-    private static final Affix KNOCKING = register(new KnockingAffix());
-    private static final Affix SHIELDING = register(new ShieldingAffix());
-    private static final Affix REFLECTION = register(new ReflectionAffix());
-    private static final Affix MAGNETIC = register(new MagneticAffix());
-    private static final Affix DAMPENING = register(new DampingAffix());
-    private static final Affix LIVELY = register(new LivelyAffix());
+    public static void init() {
+        if (ChampionsConfigAffixes.r1) register(new HastyAffix());
+        if (ChampionsConfigAffixes.r2) register(new ArcticAffix());
+        if (ChampionsConfigAffixes.r3) register(new MoltenAffix());
+        if (ChampionsConfigAffixes.r4) register(new DesecratingAffix());
+        if (ChampionsConfigAffixes.r5) register(new PlaguedAffix());
+        if (ChampionsConfigAffixes.r6) register(new InfectedAffix());
+        if (ChampionsConfigAffixes.r7) register(new AdaptiveAffix());
+        if (ChampionsConfigAffixes.r8) register(new KnockingAffix());
+        if (ChampionsConfigAffixes.r9) register(new ShieldingAffix());
+        if (ChampionsConfigAffixes.r10) register(new ReflectionAffix());
+        if (ChampionsConfigAffixes.r11) register(new MagneticAffix());
+        if (ChampionsConfigAffixes.r12) register(new DampingAffix());
+        if (ChampionsConfigAffixes.r13) register(new LivelyAffix());
 
-    private static Affix register(Affix affix) {
+        Champions.LOGGER.info("Registered {} champion affixes", ALL_AFFIXES.size());
+    }
+
+    private static void register(Affix affix) {
         ALL_AFFIXES.put(affix.getName(), affix);
-        return affix;
     }
 }

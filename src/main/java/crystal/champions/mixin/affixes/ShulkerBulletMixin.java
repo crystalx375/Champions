@@ -34,18 +34,10 @@ public abstract class ShulkerBulletMixin implements IBullet {
     public void champions$setArctic(boolean arctic) {
         this.isArctic = arctic;
     }
-    @Override
-    public boolean champions$isArctic() {
-        return this.isArctic;
-    }
 
     @Override
     public void champions$setMolten(boolean molten) {
         this.isMolten = molten;
-    }
-    @Override
-    public boolean champions$isMolten() {
-        return this.isMolten;
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))

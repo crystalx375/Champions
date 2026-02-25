@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -39,9 +41,6 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
     }
 
     /**
-     * Различные боксы для сервера и псевдо-клиентские (клиент)
-     * Хз как назвать так что так называются
-     * --------------------------------------------------------------------------------
      * Сделал так, чтобы отправлял разные пакеты, и с ними уже можно делать хоть что-то
      * При наведении чтобы можно было видеть дальше
      */
@@ -49,13 +48,13 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
     private void manageChampionHud(CallbackInfo ci) {
         if (this.getWorld().isClient || this.champions$getChampionTier() <= 0) return;
 
-        List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
-                ServerPlayerEntity.class, this.getBoundingBox().expand(40.0), p -> true
-        );
-
         Set<UUID> currentIds = new HashSet<>();
-
         MobEntity mob = (MobEntity) (Object) this;
+        boolean Bosses = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+
+        List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
+                ServerPlayerEntity.class, this.getBoundingBox().expand(80.0), p -> true
+        );
 
         for (ServerPlayerEntity player : nearby) {
             UUID uuid = player.getUuid();
@@ -63,13 +62,20 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
 
             assert ChampionsNetworking.CHAMPION_UPDATE_PACKET != null;
             if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_PACKET)) {
-                if (distance <= 225.0) {
+                if (!Bosses || distance <= 1600) {
+                    if (distance <= 225.0) {
+                        ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                        trackedPlayerIds.add(uuid);
+                        currentIds.add(uuid);
+                    }
+                    ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                } else {
                     ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                    ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
                     trackedPlayerIds.add(uuid);
                     currentIds.add(uuid);
                 }
-                ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
-            } else if (distance <= 225.0) {
+            } else if (distance <= 400.0) {
                 if (isBestChampionForPlayer(player)) {
                     updateHealth(player);
                     updateAffixes(player);

@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static crystal.champions.config.ChampionsConfig.maxBossTier;
-
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin implements IChampions {
@@ -46,22 +44,14 @@ public abstract class MobEntityMixin implements IChampions {
                 || mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
 
         boolean notAggressive = mob instanceof IronGolemEntity
-                || mob instanceof PolarBearEntity || mob instanceof WolfEntity;
-
-        boolean Bosses = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+                || mob instanceof PolarBearEntity || mob instanceof WolfEntity
+                || mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
 
         if (!isAggressive || notAggressive) return;
 
         ChampionRank rank = ChampionRank.getRandomRank(mob.getRandom());
         if (rank.tier() > 0) {
-            if (!Bosses) {
-                champions$setChampionTier(rank.tier());
-            } else {
-                System.out.println("CHAMPION" + mob);
-                int tier = rank.tier();
-                if (tier > maxBossTier) tier = maxBossTier;
-                champions$setChampionTier(tier);
-            }
+            champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);
             prepareAffixes(rank);
         }

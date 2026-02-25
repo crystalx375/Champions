@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 
-import static crystal.champions.config.ChampionsConfig.hastyAmplifier;
+import static crystal.champions.config.ChampionsConfigAffixes.hastyAmplifier;
 
 /**
  * HastyAffix

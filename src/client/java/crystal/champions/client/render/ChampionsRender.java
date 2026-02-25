@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 
 import static crystal.champions.client.render.ChampionsColor.applyColor;
 import static crystal.champions.client.render.ChampionsColor.resetColor;
+import static crystal.champions.config.ChampionsConfigClient.*;
 
 public class ChampionsRender {
     private static final Identifier CHAMPION_STARS = Identifier.of("champions", "textures/gui/staricon.png");
@@ -22,15 +23,15 @@ public class ChampionsRender {
     public static void renderChampion(DrawContext context, int centerX, int y, ChampionHudRender.ChampionData data, MinecraftClient client) {
         int color = data.color();
 
-        renderStars(context, centerX, y - 5, data.tier(), color);
+        renderStars(context, centerX  + xOffsetStars, y + yOffsetStars, data.tier(), color);
 
         MutableText title = Text.literal("Skilled ").append(data.name().copy());
-        context.drawCenteredTextWithShadow(client.textRenderer, title, centerX, y + 7, color);
+        context.drawCenteredTextWithShadow(client.textRenderer, title, centerX + xOffsetText, y + yOffsetText, color);
 
-        renderProgressBar(context, centerX, y + 19, data.percent(), color);
+        renderProgressBar(context, centerX + xOffsetBar, y + yOffsetBar, data.percent(), color);
 
         if (data.affixes() != null && !data.affixes().isEmpty()) {
-            renderAffixes(context, client, centerX, y + 29, data.affixes());
+            renderAffixes(context, client, centerX + xOffsetAffixes, y + yOffsetAffixes, data.affixes());
         }
     }
 
@@ -66,14 +67,20 @@ public class ChampionsRender {
 
     private static void renderAffixes(DrawContext context, MinecraftClient client, int centerX, int y, String raw) {
         String[] split = raw.split("•|·|\\s+|,");
-        StringBuilder processed = new StringBuilder();
+        MutableText finalText = Text.empty();
+
         for (String s : split) {
             String t = s.trim();
             if (t.isEmpty()) continue;
-            MutableText translate = Text.translatable(t.startsWith("affix.") ? t : "affix." + t);
-            if (!processed.isEmpty()) processed.append(" • ");
-            processed.append(translate);
+
+            String key = t.startsWith("affix.") ? t : "affix." + t;
+
+            if (!finalText.getSiblings().isEmpty()) {
+                finalText.append(Text.literal(" • ").formatted(Formatting.DARK_GRAY));
+            }
+
+            finalText.append(Text.translatable(key).formatted(Formatting.GRAY, Formatting.ITALIC));
         }
-        context.drawCenteredTextWithShadow(client.textRenderer, Text.literal(processed.toString()).formatted(Formatting.GRAY, Formatting.ITALIC), centerX, y, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(client.textRenderer, finalText, centerX, y, 0xFFFFFF);
     }
 }

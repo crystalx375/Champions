@@ -3,9 +3,11 @@
   "package": "crystal.champions.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EnderDragonMixin",
     "EntityDataMixin",
     "MobEntityMixin",
-    "ServerChampionsBar"
+    "ServerChampionsBar",
+    "WitherMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,8 +1,11 @@
 package crystal.champions.client.net;
 
+import crystal.champions.Champions;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.util.Identifier;
-import java.util.*;
+
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientPacket {
@@ -18,6 +21,12 @@ public class ClientPacket {
      */
     public static void registerPackets() {
 
+        assert CHAMPION_REMOVE_PACKET != null;
+        ClientPlayNetworking.registerGlobalReceiver(CHAMPION_REMOVE_PACKET, (client, handler, buf, responseSender) -> {
+            UUID uuid = buf.readUuid();
+            client.execute(() -> activeChampions.remove(uuid));
+        });
+
         assert CHAMPION_UPDATE_PACKET != null;
         ClientPlayNetworking.registerGlobalReceiver(CHAMPION_UPDATE_PACKET, (client, handler, buf, responseSender) -> {
             ServerBuf(buf, client);
@@ -27,12 +36,7 @@ public class ClientPacket {
         ClientPlayNetworking.registerGlobalReceiver(CHAMPION_UPDATE_CLIENT_PACKET, (client, handler, buf, responseSender) -> {
             ClientBuf(buf, client);
         });
-
-        assert CHAMPION_REMOVE_PACKET != null;
-        ClientPlayNetworking.registerGlobalReceiver(CHAMPION_REMOVE_PACKET, (client, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            client.execute(() -> activeChampions.remove(uuid));
-        });
+        Champions.LOGGER.info("Registering network packets");
     }
 
     /**

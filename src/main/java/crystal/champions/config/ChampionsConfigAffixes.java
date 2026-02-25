@@ -1,49 +1,41 @@
 package crystal.champions.config;
 
+import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
 
-public class ChampionsConfig {
-    private static ChampionsConfig INSTANCE;
+public class ChampionsConfigAffixes {
+    private static final int version = 1;
+    private static ChampionsConfigAffixes INSTANCE;
+    static boolean first_tick = true;
 
-    // Arctic
     public static int cooldownBeforeBulletArtic;
     public static float dampeningAmount;
-    // Molten
     public static int cooldownBeforeBulletMolten;
-    // Hasty
     public static byte hastyAmplifier;
-    // Plagued
     public static int poisonDuration;
     public static byte poisonAmplifier;
-    // Desecrating
     public static int timeBeforeDesecrating;
     public static int cloudDuration;
-    // Knocking
     public static double knockback;
-    // Infected
     public static int timeBeforeInfected;
     public static int maxSilverFishCount;
     public static short infectedSilverfish;
     public static float infectedFactorHealth;
-    // Magnetic
     public static double strength;
-    // Lively
     public static int entityHeal;
     public static int entityHealTime;
-    // Reflective
     public static int reflectionDamage;
-    // Shield
     public static int shieldAllTime;
     public static int shieldWork;
 
-    public static int maxBossTier;
+    public static boolean r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13;
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
-    private ChampionsConfig() {
-        SimpleConfig CONFIG = SimpleConfig.of("champions_common")
+    private ChampionsConfigAffixes() {
+        SimpleConfig CONFIG = SimpleConfig.of("Champions", "champions_affixes")
                 .provider(this::defaultConfig)
-                .version(2)
+                .version(version)
                 .request();
 
         cooldownBeforeBulletArtic = CONFIG.getOrDefault("cooldown_arctic", 160);
@@ -77,19 +69,44 @@ public class ChampionsConfig {
         shieldAllTime = CONFIG.getOrDefault("shield_all_time", 200);
         shieldWork = CONFIG.getOrDefault("shield_working_time", 100);
 
-        maxBossTier = CONFIG.getOrDefault("max_boss_tier", 1);
+        r1 = CONFIG.getOrDefault("hasty_affix", true);
+        r2 = CONFIG.getOrDefault("arctic_affix", true);
+        r3 = CONFIG.getOrDefault("molten_affix", true);
+        r4 = CONFIG.getOrDefault("desecrating_affix", true);
+        r5 = CONFIG.getOrDefault("plagued_affix", true);
+        r6 = CONFIG.getOrDefault("infected_affix", true);
+        r7 = CONFIG.getOrDefault("adaptive_affix", true);
+        r8 = CONFIG.getOrDefault("knocking_affix", true);
+        r9 = CONFIG.getOrDefault("shielding_affix", true);
+        r10 = CONFIG.getOrDefault("reflective_affix", true);
+        r11 = CONFIG.getOrDefault("magnetic_affix", true);
+        r12 = CONFIG.getOrDefault("dampening_affix", true);
+        r13 = CONFIG.getOrDefault("lively_affix", true);
     }
 
     private String defaultConfig(String filename) {
         return """
-                # Champions Mod Configuration
+                # Champions Affixes
+                
+                # Registry
+                # If true, the affix will be in the pool
+                hasty_affix = true
+                arctic_affix = true
+                molten_affix = true
+                desecrating_affix = true
+                plagued_affix = true
+                infected_affix = true
+                adaptive_affix = true
+                knocking_affix = true
+                shielding_affix = true
+                reflective_affix = true
+                magnetic_affix = true
+                dampening_affix = true
+                lively_affix = true
                 
                 # Arctic
                 # Cooldown between arctic bullets (ticks)
                 cooldown_arctic = 160
-                # Damage reduction multiplier (0.5 = 50% less damage taken)
-                dampening_amount = 0.5
-                
                 # Molten
                 # Cooldown between molten bullets (ticks)
                 cooldown_molten = 90
@@ -100,9 +117,11 @@ public class ChampionsConfig {
                 # Duration of the cloud (ticks)
                 cloud_desecrating_duration = 200
                 
-                # Hasty
-                # Speed effect amplifier
-                hasty_amplifier = 4
+                # Plagued
+                # Duration of poison effect (ticks)
+                plagued_poison_duration = 200
+                # Poison amplifier
+                plagued_poison_amplifier = 0
                 
                 # Infected
                 # Ticks between spawning silverfish
@@ -114,9 +133,9 @@ public class ChampionsConfig {
                 # Additional silverfish (health * factor)
                 infected_factor_health = 0.1
                 
-                # Knocking
-                # Strength of the knockback
-                knocking_strength = 1.5
+                # Reflective
+                # Damage reflected back to the attacker
+                reflection_damage = 2
                 
                 # Healing
                 # Amount of heal
@@ -124,19 +143,15 @@ public class ChampionsConfig {
                 # Ticks between healing
                 when_entity_heal = 20
                 
-                # Magnetic
-                # Strength of the pull effect towards the champion
-                magnetic_strength = 1.0
+                # Knocking
+                knocking_strength = 1.5
                 
-                # Plagued
-                # Duration of poison effect (ticks)
-                plagued_poison_duration = 200
-                # Poison amplifier (0 = Level I)
-                plagued_poison_amplifier = 0
+                # Hasty
+                # Speed effect amplifier
+                hasty_amplifier = 4
                 
-                # Reflective
-                # Damage reflected back to the attacker
-                reflection_damage = 2
+                # Damage reduction multiplier (0.5 = 50% less damage taken)
+                dampening_amount = 0.5
                 
                 # Shield
                 # Cycle time of the shield (ticks)
@@ -144,13 +159,16 @@ public class ChampionsConfig {
                 # How long the shield stays active (ticks)
                 shield_working_time = 100
                 
-                max_boss_tier = 1
                 """;
     }
 
-    public static ChampionsConfig get() {
+    public static ChampionsConfigAffixes get() {
+        if (first_tick) {
+            Champions.LOGGER.info("Registering champions_affixes");
+            first_tick = false;
+        }
         if (INSTANCE == null) {
-            INSTANCE = new ChampionsConfig();
+            INSTANCE = new ChampionsConfigAffixes();
         }
         return INSTANCE;
     }

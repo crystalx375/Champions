@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
-import static crystal.champions.config.ChampionsConfig.*;
+import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * InfectedAffix

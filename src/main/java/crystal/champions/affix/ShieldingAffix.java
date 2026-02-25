@@ -5,8 +5,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 
-import static crystal.champions.config.ChampionsConfig.shieldAllTime;
-import static crystal.champions.config.ChampionsConfig.shieldWork;
+import static crystal.champions.config.ChampionsConfigAffixes.shieldAllTime;
+import static crystal.champions.config.ChampionsConfigAffixes.shieldWork;
 
 /**
  * ShieldingAffix

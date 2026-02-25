@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import static crystal.champions.config.ChampionsConfig.dampeningAmount;
+import static crystal.champions.config.ChampionsConfigAffixes.dampeningAmount;
 
 @Mixin(LivingEntity.class)
 public class DampeningMixin {

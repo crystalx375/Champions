@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
-import static crystal.champions.config.ChampionsConfig.reflectionDamage;
+import static crystal.champions.config.ChampionsConfigAffixes.reflectionDamage;
 
 @Mixin(LivingEntity.class)
 public class ReflectionMixin {

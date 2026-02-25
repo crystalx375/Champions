@@ -1,5 +1,6 @@
 package crystal.champions.mixin;
 
+import crystal.champions.Champions;
 import crystal.champions.Interface.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
@@ -13,7 +14,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static crystal.champions.color.ChampionsColorServer.getColor;
 
 @Mixin(LivingEntity.class)
 public abstract class EntityDataMixin extends Entity implements IChampions {
@@ -109,27 +111,28 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
                 if (entity instanceof MobEntity mob) affix.onAttack(entity, mob);
                 if (entity.age % 40 == 0) {
                     entity.addStatusEffect(new StatusEffectInstance(
-                            StatusEffects.SPEED, 40, champions$getChampionTier(), false, false, false));
-                    entity.addStatusEffect(new StatusEffectInstance(
-                            StatusEffects.STRENGTH, 40, champions$getChampionTier() / 3, false, false, false));
+                            StatusEffects.SPEED, 40, champions$getChampionTier() / 2, false, false, false));
                 }
             });
         } else {
-            int tier = this.champions$getChampionTier();
-            if (tier > 0) {
-                if (entity.getRandom().nextInt(50) == 0) {
-                    entity.getWorld().addParticle(
-                            ParticleTypes.CLOUD,
-                            entity.getParticleX(0.5),
-                            entity.getRandomBodyY(),
-                            entity.getParticleZ(0.5),
-                            0, 0.2, 0
-                    );
-                }
+            if (champions$getChampionTier() > 0) {
+                spawnChampionParticles(entity);
             }
         }
     }
-    
+
+    @Unique
+    private void spawnChampionParticles(LivingEntity entity) {
+        if (entity.age % 4 == 0) {
+            int color = getColor(champions$getChampionTier());
+            entity.getWorld().addParticle(
+                    Champions.CHAMPIONS_SPELL,
+                    entity.getParticleX(0.5), entity.getRandomBodyY(), entity.getParticleZ(0.5),
+                    color, 0, 0
+            );
+        }
+    }
+
     // Array
     @Override
     public List<Affix> champions$getActiveAffixes() {

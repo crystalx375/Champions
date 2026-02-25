@@ -6,7 +6,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.world.World;
 
-import static crystal.champions.config.ChampionsConfig.*;
+import static crystal.champions.config.ChampionsConfigAffixes.*;
 /**
  * PlaguedAffix
  * Здесь мы на моба ставим туманное зелье на отравление и все

@@ -6,7 +6,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.util.math.Direction;
 
-import static crystal.champions.config.ChampionsConfig.cooldownBeforeBulletArtic;
+import static crystal.champions.config.ChampionsConfigAffixes.cooldownBeforeBulletArtic;
 
 /**
  * Создаем bullet, и суем в него нбт

@@ -107,6 +107,15 @@ public class SimpleConfig {
         return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
     }
 
+    /**
+     * @author Crystal
+     * Added folder with config
+     */
+    public static ConfigRequest of( String folder, String filename ) {
+        Path path = FabricLoader.getInstance().getConfigDir().resolve(folder);
+        return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
+    }
+
     private void createConfig() throws IOException {
 
         // try creating missing files
@@ -133,8 +142,8 @@ public class SimpleConfig {
         if( !entry.isEmpty() && !entry.startsWith( "#" ) ) {
             String[] parts = entry.split("=", 2);
             if( parts.length == 2 ) {
-                config.put( parts[0], parts[1] );
-            }else{
+                config.put( parts[0].trim(), parts[1].trim() );
+            } else {
                 throw new RuntimeException("Syntax error in config file on line " + line + "!");
             }
         }
@@ -281,7 +290,7 @@ public class SimpleConfig {
                 if (s.isEmpty() || (s.startsWith("#") && !s.contains("version"))) continue;
                 if (s.startsWith("version = ")) {
                     int v = Integer.parseInt(s.split("=")[1].trim());
-                    return v != request.version;
+                    return v < request.version;
                 }
             }
         } catch (Exception e) {

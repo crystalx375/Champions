@@ -2,8 +2,8 @@ package crystal.champions.affix;
 
 import net.minecraft.entity.LivingEntity;
 
-import static crystal.champions.config.ChampionsConfig.entityHeal;
-import static crystal.champions.config.ChampionsConfig.entityHealTime;
+import static crystal.champions.config.ChampionsConfigAffixes.entityHeal;
+import static crystal.champions.config.ChampionsConfigAffixes.entityHealTime;
 
 /**
  * LivelyAffix

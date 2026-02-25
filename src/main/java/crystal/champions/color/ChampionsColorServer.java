@@ -1,25 +1,9 @@
-package crystal.champions.client.render;
+package crystal.champions.color;
 
 import crystal.champions.config.ChampionsConfigClient;
-import net.minecraft.client.gui.DrawContext;
 
-public class ChampionsColor {
+public class ChampionsColorServer {
     static ChampionsConfigClient cfg = ChampionsConfigClient.get();
-    /**
-     * Это использую для того, чтобы потом через кфг с hex цвета менять в числовое
-     * Чуть вайб кодинга было тут
-     */
-    public static void applyColor(DrawContext context, int hex) {
-        float r = (float) (hex >> 16 & 255) / 255.0F;
-        float g = (float) (hex >> 8 & 255) / 255.0F;
-        float b = (float) (hex & 255) / 255.0F;
-        context.setShaderColor(r, g, b, 1.0F);
-    }
-
-    public static void resetColor(DrawContext context) {
-        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    }
-
     private static int parseHex(String hex) {
         try {
             return Integer.decode(hex);
@@ -41,5 +25,4 @@ public class ChampionsColor {
             return 0xffffff;
         }
     }
-
 }
