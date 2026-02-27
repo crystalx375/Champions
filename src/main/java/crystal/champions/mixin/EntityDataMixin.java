@@ -1,7 +1,7 @@
 package crystal.champions.mixin;
 
 import crystal.champions.Champions;
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
 import net.minecraft.entity.Entity;
@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static crystal.champions.color.ChampionsColorServer.getColor;
+import static crystal.champions.ChampionsColorServer.getColor;
 
 @Mixin(LivingEntity.class)
 public abstract class EntityDataMixin extends Entity implements IChampions {

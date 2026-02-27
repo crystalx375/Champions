@@ -1,4 +1,4 @@
-package crystal.champions.color;
+package crystal.champions;
 
 import crystal.champions.config.ChampionsConfigClient;
 

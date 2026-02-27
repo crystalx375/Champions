@@ -5,6 +5,9 @@ import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 
+/**
+ * Custom particles for champions
+ */
 public class ChampionsParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
 

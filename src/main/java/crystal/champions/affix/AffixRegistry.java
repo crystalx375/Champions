@@ -27,6 +27,8 @@ public class AffixRegistry {
         if (ChampionsConfigAffixes.r11) register(new MagneticAffix());
         if (ChampionsConfigAffixes.r12) register(new DampingAffix());
         if (ChampionsConfigAffixes.r13) register(new LivelyAffix());
+        if (ChampionsConfigAffixes.r14) register(new BlindedAffix());
+        if (ChampionsConfigAffixes.r15) register(new ParalyzingAffix());
 
         Champions.LOGGER.info("Registered {} champion affixes", ALL_AFFIXES.size());
     }

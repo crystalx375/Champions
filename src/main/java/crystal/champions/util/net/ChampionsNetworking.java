@@ -1,4 +1,4 @@
-package crystal.champions.net;
+package crystal.champions.util.net;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

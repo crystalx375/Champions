@@ -1,6 +1,6 @@
 package crystal.champions.affix;
 
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -33,7 +33,7 @@ public class ShieldingAffix extends Affix {
         if (Shield) {
             ((ServerWorld) entity.getWorld()).spawnParticles(
                     ParticleTypes.ENTITY_EFFECT,
-                    entity.getX(), entity.getY() + 1, entity.getZ(),
+                    entity.getX(), entity.getRandomBodyY(), entity.getZ(),
                     0, 1.0, 1.0, 1.0, 0.8
             );
         }

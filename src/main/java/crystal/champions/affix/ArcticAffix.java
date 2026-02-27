@@ -1,6 +1,6 @@
 package crystal.champions.affix;
 
-import crystal.champions.Interface.IBullet;
+import crystal.champions.IBullet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.ShulkerBulletEntity;

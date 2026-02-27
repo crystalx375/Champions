@@ -1,4 +1,4 @@
-package crystal.champions.rank;
+package crystal.champions.util;
 
 import net.minecraft.util.math.random.Random;
 
@@ -6,14 +6,14 @@ import java.util.List;
 
 import static crystal.champions.config.ChampionsConfigServer.*;
 
-public record ChampionRank(int tier, int affixes, int weight, float growth) {
+public record ChampionRank(int tier, int affixes, int weight, float growth_h, float growth_s) {
     public static final List<ChampionRank> RANKS = List.of(
-            new ChampionRank(0, 0, w0, 1.0f),
-            new ChampionRank(1, a1, w1, g1),
-            new ChampionRank(2, a2, w2, g2),
-            new ChampionRank(3, a3, w3, g3),
-            new ChampionRank(4, a4, w4, g4),
-            new ChampionRank(5, a5, w5, g5)
+            new ChampionRank(0, 0, w0, 1.0f, 1.0f),
+            new ChampionRank(1, a1, w1, gh1, gs1),
+            new ChampionRank(2, a2, w2, gh2, gs2),
+            new ChampionRank(3, a3, w3, gh3, gs3),
+            new ChampionRank(4, a4, w4, gh4, gs4),
+            new ChampionRank(5, a5, w5, gh5, gs5)
     );
     private static final int TOTAL_WEIGHT;
     static {
@@ -33,6 +33,7 @@ public record ChampionRank(int tier, int affixes, int weight, float growth) {
         for (ChampionRank rank : RANKS) {
             cumulativeSum += rank.weight();
             if (roll <= cumulativeSum) {
+                System.out.println(roll);
                 return rank;
             }
         }

@@ -4,11 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AdaptiveMixin",
+    "BlindedAffix",
     "DampeningMixin",
     "KnockingAffix",
+    "ParalyzingMixin",
     "ReflectionMixin",
-    "ShieldingMixin",
-    "ShulkerBulletMixin"
+    "ShieldingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -16,8 +16,12 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"crystal.champions.Champions"
+			"crystal.champions.Champions",
+          "crystal.champions.data.ChampionsLootTableRegister"
 		],
+        "fabric-datagen": [
+          "crystal.champions.data.DataGenerator"
+        ],
 		"client": [
           "crystal.champions.client.ChampionsClient"
 		]

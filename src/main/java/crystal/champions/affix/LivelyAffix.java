@@ -1,9 +1,9 @@
 package crystal.champions.affix;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.MobEntity;
 
-import static crystal.champions.config.ChampionsConfigAffixes.entityHeal;
-import static crystal.champions.config.ChampionsConfigAffixes.entityHealTime;
+import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * LivelyAffix
@@ -16,8 +16,13 @@ public class LivelyAffix extends Affix {
     }
 
     @Override
-    public void onTick(LivingEntity entity) {
+    public void onAttack(LivingEntity entity, MobEntity mob) {
         if (entity.age % entityHealTime != 0) return;
-        entity.heal(entityHeal);
+        LivingEntity target = mob.getTarget();
+        if (target == null) {
+            mob.heal(entityHealNoTarget);
+        } else {
+            mob.heal(entityHeal);
+        }
     }
 }

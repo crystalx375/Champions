@@ -1,4 +1,4 @@
-package crystal.champions.client;
+package crystal.champions.client.render;
 
 import crystal.champions.client.net.ChampionDisplayInfo;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -49,9 +49,12 @@ public class ChampionHudRender implements HudRenderCallback {
         else if (bestChampion != null) { renderChampion(context, cX, y, bestChampion, client); }
     }
 
+    /**
+     * When looking render
+     */
     private ChampionData findBestChampionCl(MinecraftClient client, float delta) {
         long now = System.currentTimeMillis();
-        ClientLook at = performFarRaycast(client, delta, 80.0);
+        ClientLook at = performRaycast(client, delta, 80.0);
 
         if (at != null && at.check() && activeChampionsCl.containsKey(at.uuid())) {
             targetUuid = at.uuid();
@@ -70,6 +73,9 @@ public class ChampionHudRender implements HudRenderCallback {
         return null;
     }
 
+    /**
+     * Box render
+     */
     private ChampionData findBestChampion() {
         if (only_for_view) return null;
         ChampionData best = null;
@@ -92,7 +98,10 @@ public class ChampionHudRender implements HudRenderCallback {
         return best;
     }
 
-    private ClientLook performFarRaycast(MinecraftClient client, float delta, double distance) {
+    /**
+     * Use when looking
+     */
+    private ClientLook performRaycast(MinecraftClient client, float delta, double distance) {
         Entity camera = client.getCameraEntity();
         if (camera == null || client.world == null) return null;
 

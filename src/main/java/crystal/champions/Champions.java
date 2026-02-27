@@ -2,6 +2,7 @@ package crystal.champions;
 
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.config.ChampionsConfigServer;
+import crystal.champions.effects.CustomStatusEffects;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
@@ -25,5 +26,6 @@ public class Champions implements ModInitializer {
         ChampionsConfigAffixes.get();
         init();
         Registry.register(Registries.PARTICLE_TYPE, new Identifier(MOD_ID, "champions_spell"), CHAMPIONS_SPELL);
-	}
+        CustomStatusEffects.register();
+    }
 }

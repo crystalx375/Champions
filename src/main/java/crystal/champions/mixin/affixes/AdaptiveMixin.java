@@ -1,6 +1,6 @@
 package crystal.champions.mixin.affixes;
 
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import crystal.champions.affix.AdaptiveAffix;
 import crystal.champions.affix.AffixRegistry;
 import net.minecraft.entity.LivingEntity;

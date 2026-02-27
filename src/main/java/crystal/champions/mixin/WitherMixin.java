@@ -1,8 +1,8 @@
 package crystal.champions.mixin;
 
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import crystal.champions.affix.AffixRegistry;
-import crystal.champions.rank.ChampionRank;
+import crystal.champions.util.ChampionRank;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -36,7 +36,7 @@ public abstract class WitherMixin extends LivingEntity implements IChampions {
         ChampionRank rank = ChampionRank.getBossRank(mob.getRandom());
         if (rank.tier() > 0) {
             champions$setChampionTier(rank.tier());
-            prepareAttributes(mob, rank.growth());
+            prepareAttributes(mob, rank.growth_h(), rank.growth_s());
             prepareAffixes(rank.affixes());
         }
     }
@@ -44,11 +44,11 @@ public abstract class WitherMixin extends LivingEntity implements IChampions {
 
 
     @Unique
-    private void prepareAttributes(MobEntity mob, float mult) {
-        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, mult);
+    private void prepareAttributes(MobEntity mob, float h, float s) {
+        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, h);
 
         if (mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
-            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, mult);
+            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, s);
         }
     }
 

@@ -2,6 +2,7 @@ package crystal.champions.client;
 
 import crystal.champions.Champions;
 import crystal.champions.client.particle.ChampionsParticle;
+import crystal.champions.client.render.ChampionHudRender;
 import crystal.champions.config.ChampionsConfigClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -17,6 +18,7 @@ public class ChampionsClient implements ClientModInitializer {
         ChampionsConfigClient.get();
         HudRenderCallback.EVENT.register(new ChampionHudRender());
         registerPackets();
+
         ParticleFactoryRegistry.getInstance().register(Champions.CHAMPIONS_SPELL,
                 spriteProvider -> (type, world, x, y, z, vx, vy, vz) -> {
                     int color = (int) vx;

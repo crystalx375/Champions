@@ -3,10 +3,13 @@
   "package": "crystal.champions.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "CreeperEntityMixin",
     "EnderDragonMixin",
     "EntityDataMixin",
     "MobEntityMixin",
     "ServerChampionsBar",
+    "ShulkerBulletMixin",
+    "SlimeEntityMixin",
     "WitherMixin"
   ],
   "injectors": {

@@ -1,6 +1,6 @@
 package crystal.champions.affix;
 
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;

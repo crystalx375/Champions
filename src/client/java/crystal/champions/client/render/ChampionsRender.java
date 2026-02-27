@@ -1,6 +1,5 @@
 package crystal.champions.client.render;
 
-import crystal.champions.client.ChampionHudRender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.MutableText;

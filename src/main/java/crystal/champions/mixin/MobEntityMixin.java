@@ -1,8 +1,8 @@
 package crystal.champions.mixin;
 
-import crystal.champions.Interface.IChampions;
+import crystal.champions.IChampions;
 import crystal.champions.affix.AffixRegistry;
-import crystal.champions.rank.ChampionRank;
+import crystal.champions.util.ChampionRank;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -60,12 +60,13 @@ public abstract class MobEntityMixin implements IChampions {
 
     @Unique
     private void prepareAttributes(MobEntity mob, ChampionRank rank) {
-        float mult = rank.growth();
-        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, mult);
+        float h = rank.growth_h();
+        float s = rank.growth_s();
+        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, h);
         mob.setHealth(mob.getMaxHealth());
 
         if (mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
-            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, mult);
+            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, s);
         }
     }
 

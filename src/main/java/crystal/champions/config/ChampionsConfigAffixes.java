@@ -23,12 +23,17 @@ public class ChampionsConfigAffixes {
     public static float infectedFactorHealth;
     public static double strength;
     public static int entityHeal;
+    public static int entityHealNoTarget;
     public static int entityHealTime;
     public static int reflectionDamage;
     public static int shieldAllTime;
     public static int shieldWork;
+    public static float blindChance;
+    public static int blindDuration;
+    public static float paralyzeChance;
+    public static int paralyzeDuration;
 
-    public static boolean r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13;
+    public static boolean r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
@@ -54,7 +59,8 @@ public class ChampionsConfigAffixes {
 
         knockback = (float) CONFIG.getOrDefault("knocking_strength", 1.5);
 
-        entityHeal = CONFIG.getOrDefault("entity_heal", 2);
+        entityHeal = CONFIG.getOrDefault("entity_heal", 1);
+        entityHealNoTarget = CONFIG.getOrDefault("entity_heal_no_target", 4);
         entityHealTime = CONFIG.getOrDefault("when_entity_heal", 20);
 
         strength = CONFIG.getOrDefault("magnetic_strength", 1);
@@ -69,6 +75,12 @@ public class ChampionsConfigAffixes {
         shieldAllTime = CONFIG.getOrDefault("shield_all_time", 200);
         shieldWork = CONFIG.getOrDefault("shield_working_time", 100);
 
+        blindChance = (float) CONFIG.getOrDefault("blind_chance", 0.2);
+        blindDuration = CONFIG.getOrDefault("blind_duration", 80);
+
+        paralyzeChance = (float) CONFIG.getOrDefault("paralyzing_chance", 0.1);
+        paralyzeDuration = CONFIG.getOrDefault("paralyzing_duration", 60);
+
         r1 = CONFIG.getOrDefault("hasty_affix", true);
         r2 = CONFIG.getOrDefault("arctic_affix", true);
         r3 = CONFIG.getOrDefault("molten_affix", true);
@@ -82,6 +94,8 @@ public class ChampionsConfigAffixes {
         r11 = CONFIG.getOrDefault("magnetic_affix", true);
         r12 = CONFIG.getOrDefault("dampening_affix", true);
         r13 = CONFIG.getOrDefault("lively_affix", true);
+        r14 = CONFIG.getOrDefault("blinded_affix", true);
+        r15 = CONFIG.getOrDefault("paralyzing_affix", true);
     }
 
     private String defaultConfig(String filename) {
@@ -103,6 +117,8 @@ public class ChampionsConfigAffixes {
                 magnetic_affix = true
                 dampening_affix = true
                 lively_affix = true
+                blinded_affix = true
+                paralyzing_affix = true
                 
                 # Arctic
                 # Cooldown between arctic bullets (ticks)
@@ -139,7 +155,9 @@ public class ChampionsConfigAffixes {
                 
                 # Healing
                 # Amount of heal
-                entity_heal = 2
+                entity_heal = 1
+                # Amount of heal when champions doesn't have target
+                entity_heal_no_target = 4
                 # Ticks between healing
                 when_entity_heal = 20
                 
@@ -159,6 +177,17 @@ public class ChampionsConfigAffixes {
                 # How long the shield stays active (ticks)
                 shield_working_time = 100
                 
+                # Blinded
+                # Chance to blind (1.0 - 0)
+                blind_chance = 0.2
+                # Blind effect duration (ticks)
+                blind_duration = 80
+                
+                # Paralyzing
+                # Chance to paralyze (1.0 - 0)
+                paralyzing_chance = 0.1
+                # Paralyze effect duration (ticks)
+                paralyzing_duration = 60
                 """;
     }
 

@@ -1,4 +1,4 @@
-package crystal.champions.Interface;
+package crystal.champions;
 
 import crystal.champions.affix.Affix;
 
