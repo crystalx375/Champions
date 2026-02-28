@@ -81,7 +81,7 @@ public abstract class ShulkerBulletMixin extends Entity implements IBullet {
             ci.cancel();
         }
         if (champions$isMolten()) {
-            target.setOnFireFor(40);
+            target.setOnFireFor(5);
             ci.cancel();
         }
     }

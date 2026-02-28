@@ -28,16 +28,15 @@
 **Adaptable** - Champion will take less and less damage from the same consecutive damage type  
 **Arctic** - Continuously fires homing projectiles that will slow anyone they hit  
 **Dampening** - Reduces the damage of indirect attacks  
-**Desecrating** - Periodically spawns a cloud of harming underneath its target  
-**Enkindling** - Continuously fires homing projectiles that will damage and burn anyone they hit.  
+**Desecrating** - Periodically spawns a cloud of harming underneath its target
 **Hasty** - Drastically increases movement speed  
 **Infested** - Attacking and being attacked will spawn silverfish that will attack its target  
 **Knocking** - Increased knockback from attacks, which will also slow targets for a small period of time  
-**Lively** - Regenerates 1 health per second. This increases to 5 health per second when not attacking or pursuing any targets.  
-**Molten** - Grants fire resistance, fiery attacks, and armor penetration  
+**Lively** - Regenerates 1 health per second. This increases to 5 health per second when not attacking or pursuing any targets  
+**Molten** - Continuously fires homing projectiles that will damage and burn anyone they hit and grants fire resistance  
 **Magnetic** - Periodically pulls targets towards itself  
-**Paralyzing** - Small chance per attack to "jail" targets, making them unable to move positions for a few seconds
-**Blinded** - You have a chance to be Blinded for couple of seconds when a champion attacks you and hits you
+**Paralyzing** - Small chance per attack to "jail" targets, making them unable to move positions for a few seconds  
+**Blinded** - You have a chance to be Blinded for couple of seconds when a champion attacks you and hits you  
 **Plagued** - Infects nearby creatures with a Poison effect  
 **Reflective** - A small portion of damage is reflected back at the attacker  
 **Shielding** - Periodically shields itself from all damage

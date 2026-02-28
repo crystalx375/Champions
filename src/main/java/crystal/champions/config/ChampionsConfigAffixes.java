@@ -32,6 +32,8 @@ public class ChampionsConfigAffixes {
     public static int blindDuration;
     public static float paralyzeChance;
     public static int paralyzeDuration;
+    public static int magneticCooldown;
+    public static int magneticPullTime;
 
     public static boolean r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
 
@@ -52,10 +54,10 @@ public class ChampionsConfigAffixes {
 
         hastyAmplifier = (byte) CONFIG.getOrDefault("hasty_amplifier", 4);
 
-        timeBeforeInfected = CONFIG.getOrDefault("time_before_infecting", 300);
+        timeBeforeInfected = CONFIG.getOrDefault("time_before_infecting", 600);
         maxSilverFishCount = CONFIG.getOrDefault("max_silverfish_count", 10);
-        infectedSilverfish = (short) CONFIG.getOrDefault("infected_silverfish", 3);
-        infectedFactorHealth = (float) CONFIG.getOrDefault("infected_factor_health", 0.1);
+        infectedSilverfish = (short) CONFIG.getOrDefault("infected_silverfish", 4);
+        infectedFactorHealth = (float) CONFIG.getOrDefault("infected_factor_health", 0);
 
         knockback = (float) CONFIG.getOrDefault("knocking_strength", 1.5);
 
@@ -63,6 +65,8 @@ public class ChampionsConfigAffixes {
         entityHealNoTarget = CONFIG.getOrDefault("entity_heal_no_target", 4);
         entityHealTime = CONFIG.getOrDefault("when_entity_heal", 20);
 
+        magneticCooldown = CONFIG.getOrDefault("magnetic_cooldown", 600);
+        magneticPullTime = CONFIG.getOrDefault("magnetic_pull_time", 150);
         strength = CONFIG.getOrDefault("magnetic_strength", 1);
 
         cooldownBeforeBulletMolten = CONFIG.getOrDefault("cooldown_molten", 90);
@@ -141,13 +145,13 @@ public class ChampionsConfigAffixes {
                 
                 # Infected
                 # Ticks between spawning silverfish
-                time_before_infecting = 300
+                time_before_infecting = 600
                 # Max silverfish that can exist around champion
                 max_silverfish_count = 10
                 # Base number of silverfish to spawn
-                infected_silverfish = 3
+                infected_silverfish = 4
                 # Additional silverfish (health * factor)
-                infected_factor_health = 0.1
+                infected_factor_health = 0
                 
                 # Reflective
                 # Damage reflected back to the attacker
@@ -163,6 +167,14 @@ public class ChampionsConfigAffixes {
                 
                 # Knocking
                 knocking_strength = 1.5
+                
+                # Magnetic
+                # Cooldown duration (ticks)
+                magnetic_cooldown = 600
+                # Pull time (ticks)
+                magnetic_pull_time = 150
+                # Pull strength
+                magnetic_strength = 1
                 
                 # Hasty
                 # Speed effect amplifier

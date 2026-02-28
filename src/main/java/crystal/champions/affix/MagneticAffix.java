@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.Vec3d;
 
-import static crystal.champions.config.ChampionsConfigAffixes.strength;
+import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * MagneticAffix
@@ -18,7 +18,7 @@ public class MagneticAffix extends Affix {
 
     @Override
     public void onAttack(LivingEntity entity, MobEntity mob) {
-        if (entity.age % 400 <= 200) return;
+        if (entity.age % magneticCooldown <= magneticPullTime) return;
         LivingEntity target = mob.getTarget();
         if (target != null) {
             Vec3d pullDir = entity.getPos().subtract(target.getPos()).normalize();
