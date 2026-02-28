@@ -24,7 +24,7 @@ import java.util.*;
  * Если клиент отправляем пакеты с данными
  */
 @Mixin(MobEntity.class)
-public abstract class ServerChampionsBar extends LivingEntity implements IChampions {
+public abstract class ServerUpdatePackets extends LivingEntity implements IChampions {
     @Shadow
     protected abstract void removeFromDimension();
 
@@ -32,7 +32,7 @@ public abstract class ServerChampionsBar extends LivingEntity implements IChampi
     @Unique private final Map<UUID, ServerBossBar> affixBars = new HashMap<>();
     @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
-    protected ServerChampionsBar(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
+    protected ServerUpdatePackets(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
         super(type, world);
     }
 

@@ -1,5 +1,6 @@
 package crystal.champions.client.render;
 
+import crystal.champions.client.mixin.ClientWorldAccessor;
 import crystal.champions.client.net.ChampionDisplayInfo;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
@@ -39,7 +40,7 @@ public class ChampionHudRender implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
 
         if (client.player == null || client.options.hudHidden) return;
-        ChampionData bestChampion = findBestChampion();
+        ChampionData bestChampion = findBestChampion(client, delta);
         ChampionData bestChampionCl = findBestChampionCl(client, delta);
 
         int cX = client.getWindow().getScaledWidth() / 2;
@@ -76,17 +77,24 @@ public class ChampionHudRender implements HudRenderCallback {
     /**
      * Box render
      */
-    private ChampionData findBestChampion() {
-        if (only_for_view) return null;
+    private ChampionData findBestChampion(MinecraftClient client, float delta) {
+        if (only_for_view || client.world == null || client.player == null) return null;
         ChampionData best = null;
         long now = System.currentTimeMillis();
 
         for (Map.Entry<UUID, ChampionDisplayInfo> entry : activeChampions.entrySet()) {
+            UUID uuid = entry.getKey();
             ChampionDisplayInfo info = entry.getValue();
 
             if ((now - info.lastUpdate() > cache_server) || (now - info.lastUpdate() > 100 && info.health() <= 0)) {
                 activeChampions.remove(entry.getKey());
                 continue;
+            }
+
+            Entity targetEntity = ((ClientWorldAccessor) client.world).getEntityManager().getLookup().get(uuid);
+
+            if (!alwaysRenderBox) {
+                if (targetEntity == null || !targetEntity.isAlive() || !performRaycastPos(client, targetEntity, delta)) continue;
             }
 
             if (info.tier() > 10) {
@@ -96,6 +104,32 @@ public class ChampionHudRender implements HudRenderCallback {
             }
         }
         return best;
+    }
+
+    /**
+     * Use when box
+     */
+    private boolean performRaycastPos(MinecraftClient client, Entity target, float delta) {
+        Entity cameraEntity = client.getCameraEntity();
+        if (cameraEntity == null || client.world == null) return false;
+
+        Vec3d startPos = cameraEntity.getCameraPosVec(delta);
+        Vec3d endPos = target.getBoundingBox().getCenter();
+        BlockHitResult blockHit = client.world.raycast(new RaycastContext(
+                startPos,
+                endPos,
+                RaycastContext.ShapeType.COLLIDER,
+                RaycastContext.FluidHandling.NONE,
+                cameraEntity
+        ));
+
+        if (blockHit.getType() != HitResult.Type.MISS) {
+            double blockDistSq = blockHit.getPos().squaredDistanceTo(startPos);
+            double entityDistSq = endPos.squaredDistanceTo(startPos);
+            return !(blockDistSq < entityDistSq);
+        }
+
+        return true;
     }
 
     /**

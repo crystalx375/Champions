@@ -7,7 +7,7 @@
     "EnderDragonMixin",
     "EntityDataMixin",
     "MobEntityMixin",
-    "ServerChampionsBar",
+    "ServerUpdatePackets",
     "ShulkerBulletMixin",
     "SlimeEntityMixin",
     "WitherMixin"

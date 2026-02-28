@@ -28,6 +28,8 @@ public class ChampionsConfigClient {
     public String hex_tier_4;
     public String hex_tier_5;
 
+    public static boolean alwaysRenderBox;
+
 
     private ChampionsConfigClient() {
         SimpleConfig CONFIG = SimpleConfig.of("Champions","champions_client")
@@ -51,6 +53,7 @@ public class ChampionsConfigClient {
         this.hex_tier_4 = CONFIG.getOrDefault("hex_tier_4", "#8823DB");
         this.hex_tier_5 = CONFIG.getOrDefault("hex_tier_5", "#F98AFF");
 
+        alwaysRenderBox = CONFIG.getOrDefault("always_render", false);
 
         cache_client = (short) CONFIG.getOrDefault("cache_client", 1000);
         cache_server = (short) CONFIG.getOrDefault("cache_server", 5000);
@@ -78,6 +81,9 @@ public class ChampionsConfigClient {
                 x_offset_text = 0
                 x_offset_bar = 0
                 x_offset_affixes = 0
+                
+                # Will champions render through walls when cache_server has champions?
+                always_render = false
                 
                 # Time cache for champions (millis) (max = 32767)
                 cache_client = 1000

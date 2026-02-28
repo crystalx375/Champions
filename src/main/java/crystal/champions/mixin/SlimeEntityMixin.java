@@ -32,8 +32,7 @@ public abstract class SlimeEntityMixin extends Entity {
     }
 
     /**
-     * Инжектимся в метод remove, где создаются маленькие слаймы.
-     * Мы используем более гибкий подход к захвату переменных.
+     * Инжектимся в метод remove, где создаются слаймы.
      */
     @Inject(
             method = "remove",

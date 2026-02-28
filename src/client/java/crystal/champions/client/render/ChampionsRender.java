@@ -23,8 +23,7 @@ public class ChampionsRender {
         int color = data.color();
 
         renderStars(context, centerX  + xOffsetStars, y + yOffsetStars, data.tier(), color);
-
-        MutableText title = Text.literal("Skilled ").append(data.name().copy());
+        MutableText title = Text.literal(getMutableText(data)).append(data.name().copy());
         context.drawCenteredTextWithShadow(client.textRenderer, title, centerX + xOffsetText, y + yOffsetText, color);
 
         renderProgressBar(context, centerX + xOffsetBar, y + yOffsetBar, data.percent(), color);
@@ -32,6 +31,17 @@ public class ChampionsRender {
         if (data.affixes() != null && !data.affixes().isEmpty()) {
             renderAffixes(context, client, centerX + xOffsetAffixes, y + yOffsetAffixes, data.affixes());
         }
+    }
+
+    private static String getMutableText(ChampionHudRender.ChampionData data) {
+        return switch (data.tier()) {
+            case (1) -> "Skilled ";
+            case (2) -> "Elite ";
+            case (3) -> "Legendary ";
+            case (4) -> "Ultimate ";
+            case (5) -> "Mythical ";
+            default -> "Skilled ";
+        };
     }
 
     private static void renderStars(DrawContext context, int centerX, int y, int count, int color) {
