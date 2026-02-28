@@ -6,30 +6,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:netherite_helmet"
+          "name": "minecraft:wither_skeleton_skull"
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:netherite_boots"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:netherite_chestplate"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:netherite_leggings"
-        }
-      ],
-      "functions": [
-        {
-          "function": "minecraft:enchant_with_levels",
-          "levels": {
-            "type": "minecraft:uniform",
-            "max": 60.0,
-            "min": 30.0
-          },
-          "treasure": true
+          "name": "minecraft:nether_star"
         }
       ],
       "rolls": 1.0
@@ -39,10 +20,74 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:netherite_ingot"
+          "name": "minecraft:sentry_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wild_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:vex_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rib_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:shaper_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:host_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ward_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tide_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spire_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:silence_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:coast_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:eye_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:snout_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wayfinder_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:raiser_armor_trim_smithing_template"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:dune_armor_trim_smithing_template"
         }
       ],
-      "rolls": 0.2
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 5.0,
+        "min": 3.0
+      }
     },
     {
       "bonus_rolls": 0.0,
@@ -57,9 +102,18 @@
             }
           ],
           "name": "minecraft:book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ],
+          "name": "minecraft:book"
         }
       ],
-      "rolls": 3.0
+      "rolls": 4.0
     }
   ]
 }

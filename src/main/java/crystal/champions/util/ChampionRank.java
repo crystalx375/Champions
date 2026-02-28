@@ -33,7 +33,6 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
         for (ChampionRank rank : RANKS) {
             cumulativeSum += rank.weight();
             if (roll <= cumulativeSum) {
-                System.out.println(roll);
                 return rank;
             }
         }
