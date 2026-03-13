@@ -1,11 +1,8 @@
 package crystal.champions.util.net;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 /**
  * Даем Identifier пакетам и отправляем их
@@ -14,40 +11,32 @@ import net.minecraft.util.Identifier;
  * sendUpdateC (client)
  */
 public class ChampionsNetworking {
-    public static final Identifier CHAMPION_UPDATE_PACKET = Identifier.of("champions", "update_hud");
-    public static final Identifier CHAMPION_REMOVE_PACKET = Identifier.of("champions", "remove_hud");
-    public static final Identifier CHAMPION_UPDATE_CLIENT_PACKET = Identifier.of("champions", "update_client_hud");
 
     public static void sendUpdateS(ServerPlayerEntity player, MobEntity entity, int tier, String affixes) {
-
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(entity.getUuid());
-        buf.writeText(entity.getDisplayName());
-        buf.writeInt(tier);
-        buf.writeString(affixes != null ? affixes : "");
-        buf.writeFloat(entity.getHealth());
-        buf.writeFloat(entity.getMaxHealth());
-
-        if (CHAMPION_UPDATE_PACKET != null) ServerPlayNetworking.send(player, CHAMPION_UPDATE_PACKET, buf);
+        Payload.ChampionUpdate payload = new Payload.ChampionUpdate(
+                entity.getUuid(),
+                entity.getDisplayName(),
+                tier,
+                affixes,
+                entity.getHealth(),
+                entity.getMaxHealth()
+        );
+        ServerPlayNetworking.send(player, payload);
     }
 
     public static void sendUpdateC(ServerPlayerEntity player, MobEntity entity, int tier, String affixes) {
-        PacketByteBuf bufcl = PacketByteBufs.create();
-        bufcl.writeUuid(entity.getUuid());
-        bufcl.writeText(entity.getDisplayName());
-        bufcl.writeInt(tier);
-        bufcl.writeString(affixes != null ? affixes : "");
-        bufcl.writeFloat(entity.getHealth());
-        bufcl.writeFloat(entity.getMaxHealth());
-
-        if (CHAMPION_UPDATE_CLIENT_PACKET != null) ServerPlayNetworking.send(player, CHAMPION_UPDATE_CLIENT_PACKET, bufcl);
+        Payload.ChampionUpdateCl payload = new Payload.ChampionUpdateCl(
+                entity.getUuid(),
+                entity.getDisplayName(),
+                tier,
+                affixes,
+                entity.getHealth(),
+                entity.getMaxHealth()
+        );
+        ServerPlayNetworking.send(player, payload);
     }
 
     public static void sendRemove(ServerPlayerEntity player, MobEntity mob) {
-
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeUuid(mob.getUuid());
-
-        if (CHAMPION_REMOVE_PACKET != null) ServerPlayNetworking.send(player, CHAMPION_REMOVE_PACKET, buf);
+        ServerPlayNetworking.send(player, new Payload.ChampionRemove(mob.getUuid()));
     }
 }

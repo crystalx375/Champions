@@ -5,6 +5,7 @@ import crystal.champions.client.net.ChampionDisplayInfo;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.text.Text;
@@ -24,7 +25,7 @@ import static crystal.champions.client.render.ChampionsColor.getColor;
 import static crystal.champions.client.render.ChampionsRender.renderChampion;
 import static crystal.champions.config.ChampionsConfigClient.*;
 
-public class ChampionHudRender implements HudRenderCallback {
+public abstract class ChampionHudRender implements HudRenderCallback {
 
     private UUID targetUuid = null;
     private long lastUpdateAt = 0;
@@ -33,11 +34,12 @@ public class ChampionHudRender implements HudRenderCallback {
      * Отрисовка на клиент сайде
      *
      * @param context Здесь мы рисуем все что до этого сделали
-     * @param delta Используем в будущем для камеры и просчета
      */
     @Override
-    public void onHudRender(DrawContext context, float delta) {
+    public void onHudRender(DrawContext context, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        float delta = tickCounter.getTickDelta(true);
 
         if (client.player == null || client.options.hudHidden) return;
         ChampionData bestChampion = findBestChampion(client, delta);
@@ -124,11 +126,11 @@ public class ChampionHudRender implements HudRenderCallback {
         ));
 
         if (blockHit.getType() != HitResult.Type.MISS) {
+            System.out.println(1);
             double blockDistSq = blockHit.getPos().squaredDistanceTo(startPos);
             double entityDistSq = endPos.squaredDistanceTo(startPos);
             return !(blockDistSq < entityDistSq);
         }
-
         return true;
     }
 
@@ -179,7 +181,7 @@ public class ChampionHudRender implements HudRenderCallback {
             String affixes,
             float percent,
             int color
-    ) {}
+    ) { }
 
     private record ClientLook(
             boolean check,

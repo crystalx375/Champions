@@ -2,9 +2,9 @@ package crystal.champions.mixin;
 
 import crystal.champions.IChampions;
 import crystal.champions.util.net.ChampionsNetworking;
+import crystal.champions.util.net.Payload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -28,8 +28,6 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
     @Shadow
     protected abstract void removeFromDimension();
 
-    @Unique private final Map<UUID, ServerBossBar> healthBars = new HashMap<>();
-    @Unique private final Map<UUID, ServerBossBar> affixBars = new HashMap<>();
     @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
     protected ServerUpdatePackets(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
@@ -56,8 +54,7 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
             UUID uuid = player.getUuid();
             double distance = player.squaredDistanceTo(this);
 
-            assert ChampionsNetworking.CHAMPION_UPDATE_PACKET != null;
-            if (ServerPlayNetworking.canSend(player, ChampionsNetworking.CHAMPION_UPDATE_PACKET)) {
+            if (ServerPlayNetworking.canSend(player, Payload.ChampionUpdate.ID)) {
                 if (!Bosses) {
                     if (distance <= 1600) {
                         if (distance <= 225.0) {
@@ -100,11 +97,6 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
      */
     @Unique
     private void removeIt() {
-        healthBars.values().forEach(ServerBossBar::clearPlayers);
-        affixBars.values().forEach(ServerBossBar::clearPlayers);
-        healthBars.clear();
-        affixBars.clear();
-
         if (this.getWorld().getServer() == null) return;
 
         Set<UUID> ids= new HashSet<>(trackedPlayerIds);

@@ -23,7 +23,7 @@ public class ChampionsRender {
         int color = data.color();
 
         renderStars(context, centerX  + xOffsetStars, y + yOffsetStars, data.tier(), color);
-        MutableText title = Text.literal(getMutableText(data)).append(data.name().copy());
+        MutableText title = Text.literal(getMutableText(data)).append(data.name());
         context.drawCenteredTextWithShadow(client.textRenderer, title, centerX + xOffsetText, y + yOffsetText, color);
 
         renderProgressBar(context, centerX + xOffsetBar, y + yOffsetBar, data.percent(), color);

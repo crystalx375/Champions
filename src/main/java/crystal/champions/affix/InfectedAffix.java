@@ -36,7 +36,7 @@ public class InfectedAffix extends Affix {
             SilverfishEntity silverfish = EntityType.SILVERFISH.create(world);
             if (silverfish != null) {
                 silverfish.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
-                silverfish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null, null);
+                silverfish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null);
 
                 world.spawnEntity(silverfish);
             }

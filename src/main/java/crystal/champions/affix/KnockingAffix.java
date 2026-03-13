@@ -21,9 +21,8 @@ public class KnockingAffix extends Affix {
         float yaw = champion.getYaw();
         double x = -Math.sin(yaw * 0.017453292F);
         double z = Math.cos(yaw * 0.017453292F);
-        
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1));
-        target.teleport(target.getX(), target.getY() + 0.1, + target.getZ());
+        target.teleport(target.getX(), target.getY() + 0.1, target.getZ(), true);
         target.addVelocity(knockback * x, knockback * 0.3, knockback * z);
         target.velocityModified = true;
     }

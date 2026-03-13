@@ -32,7 +32,7 @@ public class ShieldingAffix extends Affix {
         }
         if (Shield) {
             ((ServerWorld) entity.getWorld()).spawnParticles(
-                    ParticleTypes.ENTITY_EFFECT,
+                    ParticleTypes.EFFECT,
                     entity.getX(), entity.getRandomBodyY(), entity.getZ(),
                     0, 1.0, 1.0, 1.0, 0.8
             );

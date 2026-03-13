@@ -92,14 +92,12 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
      * Ну и логика тут дальше
      */
     @Inject(method = "initDataTracker", at = @At("TAIL"))
-    protected void initChampionTracker(CallbackInfo ci) {
-        this.dataTracker.startTracking(AFFIXES, "");
-        this.dataTracker.startTracking(CHAMPION_TIER, 0);
-
-        this.dataTracker.startTracking(ADAPT_TYPE, "");
-        this.dataTracker.startTracking(ADAPT_COUNT, 0);
-
-        this.dataTracker.startTracking(IS_SHIELDING, false);
+    protected void initChampionTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(CHAMPION_TIER, 0);
+        builder.add(AFFIXES, "");
+        builder.add(ADAPT_TYPE, "");
+        builder.add(ADAPT_COUNT, 0);
+        builder.add(IS_SHIELDING, false);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

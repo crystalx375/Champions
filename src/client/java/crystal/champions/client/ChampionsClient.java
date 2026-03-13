@@ -16,7 +16,8 @@ public class ChampionsClient implements ClientModInitializer {
     public void onInitializeClient() {
         Champions.LOGGER.info("Loading champions on client...");
         ChampionsConfigClient.get();
-        HudRenderCallback.EVENT.register(new ChampionHudRender());
+        HudRenderCallback.EVENT.register(new ChampionHudRender() {
+        });
         registerPackets();
 
         ParticleFactoryRegistry.getInstance().register(Champions.CHAMPIONS_SPELL,

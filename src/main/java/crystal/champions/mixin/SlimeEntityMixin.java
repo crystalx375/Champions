@@ -6,11 +6,10 @@ import crystal.champions.util.ChampionRank;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SlimeEntity;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +38,7 @@ public abstract class SlimeEntityMixin extends Entity {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;spawnEntity(Lnet/minecraft/entity/Entity;)Z"),
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void applyChampions(RemovalReason reason, CallbackInfo ci, int i, Text text, boolean bl, float f, int j, int k, int l, float g, float h, SlimeEntity slimeEntity) {
+    private void applyChampions(RemovalReason reason, CallbackInfo ci, int i, Text text, boolean bl, float f, float g, int j, int k, int l, float h, float m, SlimeEntity slimeEntity) {
         IChampions child = (IChampions) slimeEntity;
         ChampionRank rank = ChampionRank.getRandomRank(slimeEntity.getRandom());
         if (rank.tier() > 0) {
@@ -69,19 +68,14 @@ public abstract class SlimeEntityMixin extends Entity {
         int count = Math.min(rank.affixes(), pool.size());
 
         List<String> selected = pool.subList(0, count);
-        String result = String.join(",", selected);
-        return result;
+        return String.join(",", selected);
     }
 
     @Unique
-    private void modifyAttribute(MobEntity entity, EntityAttribute attribute, float m) {
-        EntityAttributeInstance instance = entity.getAttributeInstance(attribute);
+    private void modifyAttribute(MobEntity entity, RegistryEntry<EntityAttribute> attribute, float m) {
+        var instance = entity.getAttributeInstance(attribute);
         if (instance != null) {
-            instance.addPersistentModifier(new EntityAttributeModifier(
-                    "champion_modifier_split",
-                    m - 1.0,
-                    EntityAttributeModifier.Operation.MULTIPLY_BASE
-            ));
+            instance.setBaseValue(instance.getBaseValue() * m);
         }
     }
 }
