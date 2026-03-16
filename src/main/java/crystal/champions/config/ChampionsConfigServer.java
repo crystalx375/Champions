@@ -4,7 +4,7 @@ import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
 
 public class ChampionsConfigServer {
-    private static final int version = 1;
+    private static final int version = 2;
     private static ChampionsConfigServer INSTANCE;
     static boolean first_tick = true;
 
@@ -35,16 +35,16 @@ public class ChampionsConfigServer {
         w5 = CONFIG.getOrDefault("tier5_weight", 1);
 
         gh1 = (float) CONFIG.getOrDefault("tier1_growth_health", 1.5);
-        gh2 = (float) CONFIG.getOrDefault("tier2_growth_health", 3.0);
-        gh3 = (float) CONFIG.getOrDefault("tier3_growth_health", 5.0);
-        gh4 = (float) CONFIG.getOrDefault("tier4_growth_health", 12.0);
-        gh5 = (float) CONFIG.getOrDefault("tier5_growth_health", 30.0);
+        gh2 = (float) CONFIG.getOrDefault("tier2_growth_health", 2.5);
+        gh3 = (float) CONFIG.getOrDefault("tier3_growth_health", 4.0);
+        gh4 = (float) CONFIG.getOrDefault("tier4_growth_health", 8.0);
+        gh5 = (float) CONFIG.getOrDefault("tier5_growth_health", 15.0);
 
         gs1 = (float) CONFIG.getOrDefault("tier1_growth_strength", 1.5);
-        gs2 = (float) CONFIG.getOrDefault("tier2_growth_strength", 2.0);
-        gs3 = (float) CONFIG.getOrDefault("tier3_growth_strength", 4.0);
-        gs4 = (float) CONFIG.getOrDefault("tier4_growth_strength", 7.0);
-        gs5 = (float) CONFIG.getOrDefault("tier5_growth_strength", 10.0);
+        gs2 = (float) CONFIG.getOrDefault("tier2_growth_strength", 1.8);
+        gs3 = (float) CONFIG.getOrDefault("tier3_growth_strength", 2.2);
+        gs4 = (float) CONFIG.getOrDefault("tier4_growth_strength", 3.5);
+        gs5 = (float) CONFIG.getOrDefault("tier5_growth_strength", 5.0);
 
         maxBossTier = CONFIG.getOrDefault("max_boss_tier", 0);
     }
@@ -65,26 +65,26 @@ public class ChampionsConfigServer {
                 # Tier 2
                 tier2_affixes_count = 2
                 tier2_weight = 150
-                tier2_growth_health = 3.0
-                tier2_growth_strength = 2.0
+                tier2_growth_health = 2.5
+                tier2_growth_strength = 1.8
 
                 # Tier 3
                 tier3_affixes_count = 3
                 tier3_weight = 30
-                tier3_growth_health = 5.0
-                tier3_growth_strength = 4.0
+                tier3_growth_health = 4.0
+                tier3_growth_strength = 2.2
 
                 # Tier 4
                 tier4_affixes_count = 4
                 tier4_weight = 3
-                tier4_growth_health = 12.0
-                tier4_growth_strength = 7.0
+                tier4_growth_health = 8.0
+                tier4_growth_strength = 3.5
 
                 # Tier 5
                 tier5_affixes_count = 8
                 tier5_weight = 1
-                tier5_growth_health = 30.0
-                tier5_growth_strength = 10.0
+                tier5_growth_health = 15.0
+                tier5_growth_strength = 5.0
                 
                 # Maximum tier for bosses (Wither, Ender Dragon)
                 max_boss_tier = 0
