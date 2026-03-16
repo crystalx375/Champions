@@ -126,7 +126,6 @@ public abstract class ChampionHudRender implements HudRenderCallback {
         ));
 
         if (blockHit.getType() != HitResult.Type.MISS) {
-            System.out.println(1);
             double blockDistSq = blockHit.getPos().squaredDistanceTo(startPos);
             double entityDistSq = endPos.squaredDistanceTo(startPos);
             return !(blockDistSq < entityDistSq);

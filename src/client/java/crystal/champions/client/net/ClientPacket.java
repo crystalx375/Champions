@@ -17,7 +17,6 @@ public class ClientPacket {
     public static void registerPackets() {
 
             ClientPlayNetworking.registerGlobalReceiver(Payload.ChampionRemove.ID, (buf, context) -> {
-                System.out.println(2);
                 context.client().execute(() -> activeChampions.remove(buf.uuid()));
                 context.client().execute(() -> activeChampionsCl.remove(buf.uuid()));
             });
