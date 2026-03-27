@@ -7,9 +7,6 @@ import crystal.champions.affix.AffixRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -38,66 +35,58 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
         super(type, world);
     }
 
-    @Unique private static final TrackedData<Integer> CHAMPION_TIER = DataTracker.registerData(EntityDataMixin.class, TrackedDataHandlerRegistry.INTEGER);
-    @Unique private static final TrackedData<String> AFFIXES = DataTracker.registerData(EntityDataMixin.class, TrackedDataHandlerRegistry.STRING);
-    @Unique private static final TrackedData<String> ADAPT_TYPE = DataTracker.registerData(EntityDataMixin.class, TrackedDataHandlerRegistry.STRING);
-    @Unique private static final TrackedData<Integer> ADAPT_COUNT = DataTracker.registerData(EntityDataMixin.class, TrackedDataHandlerRegistry.INTEGER);
-    @Unique private static final TrackedData<Boolean> IS_SHIELDING = DataTracker.registerData(EntityDataMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
+    @Unique private int CHAMPION_TIER = 0;
+    @Unique private String AFFIXES = "";
+    @Unique private String ADAPT_TYPE = "";
+    @Unique private int ADAPT_COUNT = 0;
+    @Unique private boolean IS_SHIELDING = false;
 
     /**
      * Устанавливаем сеттеры и геттеры
      */
     @Override
     public int champions$getChampionTier() {
-        return this.dataTracker.get(CHAMPION_TIER);
+        return CHAMPION_TIER;
     }
     @Override
     public void champions$setChampionTier(int tier) {
-        this.dataTracker.set(CHAMPION_TIER, tier);
+        CHAMPION_TIER = tier;
     }
     // affixes
     @Override
     public String champions$getAffixesString() {
-        return this.dataTracker.get(AFFIXES);
+        return AFFIXES;
     }
     @Override
     public void champions$setAffixesString(String affixes) {
-        this.dataTracker.set(AFFIXES, affixes);
+        AFFIXES = affixes;
     }
     // adaptive
     @Override
     public String champions$getAdaptationType() {
-        return this.dataTracker.get(ADAPT_TYPE);
+        return ADAPT_TYPE;
     }
     @Override
     public void champions$setAdaptationType(String type) {
-        this.dataTracker.set(ADAPT_TYPE, type);
+        ADAPT_TYPE = type;
     }
     @Override
     public int champions$getAdaptation() {
-        return this.dataTracker.get(ADAPT_COUNT);
+        return ADAPT_COUNT;
     }
     @Override
     public void champions$setAdaptation(int count) {
-        this.dataTracker.set(ADAPT_COUNT, count);
+        ADAPT_COUNT = count;
     }
     // shield
     @Override
-    public boolean champions$isShielding() { return this.dataTracker.get(IS_SHIELDING); }
+    public boolean champions$isShielding() {
+        return IS_SHIELDING;
+    }
 
     @Override
-    public void champions$setShielding(boolean value) { this.dataTracker.set(IS_SHIELDING, value); }
-
-    /**
-     * Ну и логика тут дальше
-     */
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    protected void initChampionTracker(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(CHAMPION_TIER, 0);
-        builder.add(AFFIXES, "");
-        builder.add(ADAPT_TYPE, "");
-        builder.add(ADAPT_COUNT, 0);
-        builder.add(IS_SHIELDING, false);
+    public void champions$setShielding(boolean value) {
+        IS_SHIELDING = value;
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -109,7 +98,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
                 if (entity instanceof MobEntity mob) affix.onAttack(entity, mob);
                 if (entity.age % 40 == 0) {
                     entity.addStatusEffect(new StatusEffectInstance(
-                            StatusEffects.SPEED, 40, champions$getChampionTier() / 2, false, false, false));
+                            StatusEffects.SPEED, 40, CHAMPION_TIER / 3, false, false, false));
                 }
             });
         } else {
@@ -134,7 +123,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     // Array
     @Override
     public List<Affix> champions$getActiveAffixes() {
-        String raw = this.dataTracker.get(AFFIXES);
+        String raw = AFFIXES;
         if (raw.isEmpty()) return Collections.emptyList();
         return Arrays.stream(raw.split(","))
                 .map(AffixRegistry.ALL_AFFIXES::get).filter(Objects::nonNull).toList();
