@@ -27,7 +27,7 @@ public abstract class ShulkerBulletMixin extends Entity implements IBullet {
     @Unique private static final TrackedData<Boolean> ARCTIC = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
     @Unique private static final TrackedData<Boolean> MOLTEN = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public ShulkerBulletMixin(EntityType<?> type, World world) { super(type, world); }
+    protected ShulkerBulletMixin(EntityType<?> type, World world) { super(type, world); }
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     protected void initChampionTracker(DataTracker.Builder builder, CallbackInfo ci) {

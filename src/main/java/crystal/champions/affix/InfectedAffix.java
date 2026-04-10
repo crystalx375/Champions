@@ -1,5 +1,6 @@
 package crystal.champions.affix;
 
+import crystal.champions.config.ChampionsConfigAffixes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -8,8 +9,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
-
-import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * InfectedAffix
@@ -22,16 +21,18 @@ public class InfectedAffix extends Affix {
         super("infected");
     }
 
+    ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
+
     @Override
     public void onTick(LivingEntity entity) {
-        if (entity.age % timeBeforeInfected != 0) return;
+        if (entity.age % config.timeBeforeInfected != 0) return;
         ServerWorld world = (ServerWorld) entity.getWorld();
         List<SilverfishEntity> nearby = world.getEntitiesByClass(SilverfishEntity.class, entity.getBoundingBox().expand(40.0), e -> true);
-        if (nearby.size() > maxSilverFishCount) return;
+        if (nearby.size() > config.maxSilverFishCount) return;
 
         BlockPos pos = entity.getBlockPos();
-        int count = (int) (entity.getHealth() * infectedFactorHealth + infectedSilverfish);
-        count = Math.min(count, maxSilverFishCount);
+        int count = (int) (entity.getHealth() * config.infectedFactorHealth + config.infectedSilverfish);
+        count = Math.min(count, config.maxSilverFishCount);
         for (int i = 0; i < count; i++) {
             SilverfishEntity silverfish = EntityType.SILVERFISH.create(world);
             if (silverfish != null) {

@@ -11,6 +11,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
  * sendUpdateC (client)
  */
 public class ChampionsNetworking {
+    private ChampionsNetworking() {
+        /* This utility class should not be instantiated */
+    }
 
     public static void sendUpdateS(ServerPlayerEntity player, MobEntity entity, int tier, String affixes) {
         Payload.ChampionUpdate payload = new Payload.ChampionUpdate(

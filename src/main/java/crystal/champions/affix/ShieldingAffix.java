@@ -1,12 +1,10 @@
 package crystal.champions.affix;
 
 import crystal.champions.IChampions;
+import crystal.champions.config.ChampionsConfigAffixes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-
-import static crystal.champions.config.ChampionsConfigAffixes.shieldAllTime;
-import static crystal.champions.config.ChampionsConfigAffixes.shieldWork;
 
 /**
  * ShieldingAffix
@@ -18,6 +16,8 @@ public class ShieldingAffix extends Affix {
         super("shielding");
     }
 
+    ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
+
     @Override
     public void onTick(LivingEntity entity) {
         if (entity.getWorld().isClient) return;
@@ -25,12 +25,12 @@ public class ShieldingAffix extends Affix {
         IChampions champion = (IChampions) entity;
         long time = entity.getWorld().getTime();
 
-        boolean Shield = (time % shieldAllTime) < shieldWork;
+        boolean shieldWork = (time % config.shieldAllTime) < config.shieldWork;
 
-        if (champion.champions$isShielding() != Shield) {
-            champion.champions$setShielding(Shield);
+        if (champion.champions$isShielding() != shieldWork) {
+            champion.champions$setShielding(shieldWork);
         }
-        if (Shield) {
+        if (shieldWork) {
             ((ServerWorld) entity.getWorld()).spawnParticles(
                     ParticleTypes.EFFECT,
                     entity.getX(), entity.getRandomBodyY(), entity.getZ(),

@@ -17,12 +17,10 @@ public class AdaptiveMixin {
      */
     @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
     private float applyAdaptive(float amount, DamageSource source) {
-        if ((Object)this instanceof IChampions champion && champion.champions$getAffixesString().contains("adaptive")) {
+        if (this instanceof IChampions champion && champion.champions$getAffixesString().contains("adaptive")) {
             AdaptiveAffix affix = (AdaptiveAffix) AffixRegistry.ALL_AFFIXES.get("adaptive");
             if (affix != null) {
-                // Скам от IDE?
-                if (source.getSource() == champion && source.getAttacker() == champion) return amount;
-                return affix.calculateDamage((LivingEntity)(Object)this, source, amount);
+                return affix.calculateDamage((LivingEntity) (Object) this, source, amount);
             }
         }
         return amount;

@@ -4,49 +4,67 @@ import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
 
 public class ChampionsConfigServer {
-    private static final int version = 2;
-    private static ChampionsConfigServer INSTANCE;
-    static boolean first_tick = true;
+    private static final int VERSION = 2;
+    private static ChampionsConfigServer instance;
+    private static boolean firstTick = true;
 
-    public static int a1, a2, a3, a4, a5;
-    public static int w0, w1, w2, w3, w4, w5;
-    public static float gh1, gh2, gh3, gh4, gh5;
-    public static float gs1, gs2, gs3, gs4, gs5;
+    public final int a1;
+    public final int a2;
+    public final int a3;
+    public final int a4;
+    public final int a5;
+    public final int w0;
+    public final int w1;
+    public final int w2;
+    public final int w3;
+    public final int w4;
+    public final int w5;
+    public final float gh1;
+    public final float gh2;
+    public final float gh3;
+    public final float gh4;
+    public final float gh5;
+    public final float gs1;
+    public final float gs2;
+    public final float gs3;
+    public final float gs4;
+    public final float gs5;
 
-    public static int maxBossTier;
+    public final int maxBossTier;
 
     private ChampionsConfigServer() {
-        SimpleConfig CONFIG = SimpleConfig.of("Champions", "champions_common")
+        SimpleConfig config = SimpleConfig.of("Champions", "champions_common")
                 .provider(this::defaultConfig)
-                .version(version)
+                .version(VERSION) // Убедись, что VERSION — это static final константа
                 .request();
 
-        a1 = CONFIG.getOrDefault("tier1_affixes_count", 1);
-        a2 = CONFIG.getOrDefault("tier2_affixes_count", 2);
-        a3 = CONFIG.getOrDefault("tier3_affixes_count", 3);
-        a4 = CONFIG.getOrDefault("tier4_affixes_count", 4);
-        a5 = CONFIG.getOrDefault("tier5_affixes_count", 8);
+        // Теперь мы можем присваивать значения FINAL полям прямо здесь
+        this.a1 = config.getOrDefault("tier1_affixes_count", 1);
+        this.a2 = config.getOrDefault("tier2_affixes_count", 2);
+        this.a3 = config.getOrDefault("tier3_affixes_count", 3);
+        this.a4 = config.getOrDefault("tier4_affixes_count", 4);
+        this.a5 = config.getOrDefault("tier5_affixes_count", 8);
 
-        w0 = CONFIG.getOrDefault("tier0_weight", 9320);
-        w1 = CONFIG.getOrDefault("tier1_weight", 500);
-        w2 = CONFIG.getOrDefault("tier2_weight", 150);
-        w3 = CONFIG.getOrDefault("tier3_weight", 26);
-        w4 = CONFIG.getOrDefault("tier4_weight", 3);
-        w5 = CONFIG.getOrDefault("tier5_weight", 1);
+        this.w0 = config.getOrDefault("tier0_weight", 9320);
+        this.w1 = config.getOrDefault("tier1_weight", 500);
+        this.w2 = config.getOrDefault("tier2_weight", 150);
+        this.w3 = config.getOrDefault("tier3_weight", 26);
+        this.w4 = config.getOrDefault("tier4_weight", 3);
+        this.w5 = config.getOrDefault("tier5_weight", 1);
 
-        gh1 = (float) CONFIG.getOrDefault("tier1_growth_health", 1.5);
-        gh2 = (float) CONFIG.getOrDefault("tier2_growth_health", 2.5);
-        gh3 = (float) CONFIG.getOrDefault("tier3_growth_health", 4.0);
-        gh4 = (float) CONFIG.getOrDefault("tier4_growth_health", 8.0);
-        gh5 = (float) CONFIG.getOrDefault("tier5_growth_health", 15.0);
+        this.gh1 = ((float) config.getOrDefault("tier1_growth_health", 1.5));
+        this.gh2 = ((float) config.getOrDefault("tier2_growth_health", 2.5));
+        this.gh3 = ((float) config.getOrDefault("tier3_growth_health", 4.0));
+        this.gh4 = ((float) config.getOrDefault("tier4_growth_health", 8.0));
+        this.gh5 = ((float) config.getOrDefault("tier5_growth_health", 15.0));
 
-        gs1 = (float) CONFIG.getOrDefault("tier1_growth_strength", 1.5);
-        gs2 = (float) CONFIG.getOrDefault("tier2_growth_strength", 1.8);
-        gs3 = (float) CONFIG.getOrDefault("tier3_growth_strength", 2.2);
-        gs4 = (float) CONFIG.getOrDefault("tier4_growth_strength", 3.5);
-        gs5 = (float) CONFIG.getOrDefault("tier5_growth_strength", 5.0);
+        this.gs1 = ((float) config.getOrDefault("tier1_growth_strength", 1.5));
+        this.gs2 = ((float) config.getOrDefault("tier2_growth_strength", 1.8));
+        this.gs3 = ((float) config.getOrDefault("tier3_growth_strength", 2.2));
+        this.gs4 = ((float) config.getOrDefault("tier4_growth_strength", 3.5));
+        this.gs5 = ((float) config.getOrDefault("tier5_growth_strength", 5.0));
 
-        maxBossTier = CONFIG.getOrDefault("max_boss_tier", 0);
+        this.maxBossTier = config.getOrDefault("max_boss_tier", 0);
     }
 
     private String defaultConfig(String filename) {
@@ -92,13 +110,13 @@ public class ChampionsConfigServer {
     }
 
     public static ChampionsConfigServer get() {
-        if (first_tick) {
+        if (firstTick) {
             Champions.LOGGER.info("Registering champions_common");
-            first_tick = false;
+            firstTick = false;
         }
-        if (INSTANCE == null) {
-            INSTANCE = new ChampionsConfigServer();
+        if (instance == null) {
+            instance = new ChampionsConfigServer();
         }
-        return INSTANCE;
+        return instance;
     }
 }

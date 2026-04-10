@@ -4,102 +4,116 @@ import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
 
 public class ChampionsConfigAffixes {
-    private static final int version = 1;
-    private static ChampionsConfigAffixes INSTANCE;
-    static boolean first_tick = true;
+    private static final int VERSION = 1;
+    private static ChampionsConfigAffixes instance;
+    static boolean firstTick = true;
 
-    public static int cooldownBeforeBulletArtic;
-    public static float dampeningAmount;
-    public static int cooldownBeforeBulletMolten;
-    public static byte hastyAmplifier;
-    public static int poisonDuration;
-    public static byte poisonAmplifier;
-    public static int timeBeforeDesecrating;
-    public static int cloudDuration;
-    public static double knockback;
-    public static int timeBeforeInfected;
-    public static int maxSilverFishCount;
-    public static short infectedSilverfish;
-    public static float infectedFactorHealth;
-    public static double strength;
-    public static int entityHeal;
-    public static int entityHealNoTarget;
-    public static int entityHealTime;
-    public static int reflectionDamage;
-    public static int shieldAllTime;
-    public static int shieldWork;
-    public static float blindChance;
-    public static int blindDuration;
-    public static float paralyzeChance;
-    public static int paralyzeDuration;
-    public static int magneticCooldown;
-    public static int magneticPullTime;
+    public final int cooldownBeforeBulletArtic;
+    public final float dampeningAmount;
+    public final int cooldownBeforeBulletMolten;
+    public final byte hastyAmplifier;
+    public final int poisonDuration;
+    public final byte poisonAmplifier;
+    public final int timeBeforeDesecrating;
+    public final int cloudDuration;
+    public final double knockback;
+    public final int timeBeforeInfected;
+    public final int maxSilverFishCount;
+    public final short infectedSilverfish;
+    public final float infectedFactorHealth;
+    public final double strength;
+    public final int entityHeal;
+    public final int entityHealNoTarget;
+    public final int entityHealTime;
+    public final int reflectionDamage;
+    public final int shieldAllTime;
+    public final int shieldWork;
+    public final float blindChance;
+    public final int blindDuration;
+    public final float paralyzeChance;
+    public final int paralyzeDuration;
+    public final int magneticCooldown;
+    public final int magneticPullTime;
 
-    public static boolean r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15;
+    public final boolean r1;
+    public final boolean r2;
+    public final boolean r3;
+    public final boolean r4;
+    public final boolean r5;
+    public final boolean r6;
+    public final boolean r7;
+    public final boolean r8;
+    public final boolean r9;
+    public final boolean r10;
+    public final boolean r11;
+    public final boolean r12;
+    public final boolean r13;
+    public final boolean r14;
+    public final boolean r15;
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
     private ChampionsConfigAffixes() {
-        SimpleConfig CONFIG = SimpleConfig.of("Champions", "champions_affixes")
+        SimpleConfig config = SimpleConfig.of("Champions", "champions_affixes")
                 .provider(this::defaultConfig)
-                .version(version)
+                .version(VERSION)
                 .request();
 
-        cooldownBeforeBulletArtic = CONFIG.getOrDefault("cooldown_arctic", 160);
+        cooldownBeforeBulletArtic = config.getOrDefault("cooldown_arctic", 160);
 
-        dampeningAmount = (float) CONFIG.getOrDefault("dampening_amount", 0.5);
+        dampeningAmount = (float) config.getOrDefault("dampening_amount", 0.5);
 
-        timeBeforeDesecrating = CONFIG.getOrDefault("time_before_desecrating", 1000);
-        cloudDuration = CONFIG.getOrDefault("cloud_desecrating_duration", 200);
+        timeBeforeDesecrating = config.getOrDefault("time_before_desecrating", 1000);
+        cloudDuration = config.getOrDefault("cloud_desecrating_duration", 200);
 
-        hastyAmplifier = (byte) CONFIG.getOrDefault("hasty_amplifier", 4);
+        hastyAmplifier = (byte) config.getOrDefault("hasty_amplifier", 4);
 
-        timeBeforeInfected = CONFIG.getOrDefault("time_before_infecting", 600);
-        maxSilverFishCount = CONFIG.getOrDefault("max_silverfish_count", 10);
-        infectedSilverfish = (short) CONFIG.getOrDefault("infected_silverfish", 4);
-        infectedFactorHealth = (float) CONFIG.getOrDefault("infected_factor_health", 0);
+        timeBeforeInfected = config.getOrDefault("time_before_infecting", 600);
+        maxSilverFishCount = config.getOrDefault("max_silverfish_count", 10);
+        infectedSilverfish = (short) config.getOrDefault("infected_silverfish", 4);
+        infectedFactorHealth = (float) config.getOrDefault("infected_factor_health", 0.0);
 
-        knockback = (float) CONFIG.getOrDefault("knocking_strength", 1.5);
+        knockback = (float) config.getOrDefault("knocking_strength", 1.5);
 
-        entityHeal = CONFIG.getOrDefault("entity_heal", 1);
-        entityHealNoTarget = CONFIG.getOrDefault("entity_heal_no_target", 4);
-        entityHealTime = CONFIG.getOrDefault("when_entity_heal", 20);
+        entityHeal = config.getOrDefault("entity_heal", 1);
+        entityHealNoTarget = config.getOrDefault("entity_heal_no_target", 4);
+        entityHealTime = config.getOrDefault("when_entity_heal", 20);
 
-        magneticCooldown = CONFIG.getOrDefault("magnetic_cooldown", 600);
-        magneticPullTime = CONFIG.getOrDefault("magnetic_pull_time", 150);
-        strength = CONFIG.getOrDefault("magnetic_strength", 1);
+        magneticCooldown = config.getOrDefault("magnetic_cooldown", 600);
+        magneticPullTime = config.getOrDefault("magnetic_pull_time", 150);
+        strength = config.getOrDefault("magnetic_strength", 1);
 
-        cooldownBeforeBulletMolten = CONFIG.getOrDefault("cooldown_molten", 90);
+        cooldownBeforeBulletMolten = config.getOrDefault("cooldown_molten", 90);
 
-        poisonDuration = CONFIG.getOrDefault("plagued_poison_duration", 200);
-        poisonAmplifier = (byte) CONFIG.getOrDefault("plagued_poison_amplifier", 0);
+        poisonDuration = config.getOrDefault("plagued_poison_duration", 200);
+        poisonAmplifier = (byte) config.getOrDefault("plagued_poison_amplifier", 0);
 
-        reflectionDamage = CONFIG.getOrDefault("reflection_damage", 2);
+        reflectionDamage = config.getOrDefault("reflection_damage", 2);
 
-        shieldAllTime = CONFIG.getOrDefault("shield_all_time", 200);
-        shieldWork = CONFIG.getOrDefault("shield_working_time", 100);
+        shieldAllTime = config.getOrDefault("shield_all_time", 200);
+        shieldWork = config.getOrDefault("shield_working_time", 100);
 
-        blindChance = (float) CONFIG.getOrDefault("blind_chance", 0.2);
-        blindDuration = CONFIG.getOrDefault("blind_duration", 80);
+        blindChance = (float) config.getOrDefault("blind_chance", 0.2);
+        blindDuration = config.getOrDefault("blind_duration", 80);
 
-        paralyzeChance = (float) CONFIG.getOrDefault("paralyzing_chance", 0.1);
-        paralyzeDuration = CONFIG.getOrDefault("paralyzing_duration", 60);
+        paralyzeChance = (float) config.getOrDefault("paralyzing_chance", 0.1);
+        paralyzeDuration = config.getOrDefault("paralyzing_duration", 60);
 
-        r1 = CONFIG.getOrDefault("hasty_affix", true);
-        r2 = CONFIG.getOrDefault("arctic_affix", true);
-        r3 = CONFIG.getOrDefault("molten_affix", true);
-        r4 = CONFIG.getOrDefault("desecrating_affix", true);
-        r5 = CONFIG.getOrDefault("plagued_affix", true);
-        r6 = CONFIG.getOrDefault("infected_affix", true);
-        r7 = CONFIG.getOrDefault("adaptive_affix", true);
-        r8 = CONFIG.getOrDefault("knocking_affix", true);
-        r9 = CONFIG.getOrDefault("shielding_affix", true);
-        r10 = CONFIG.getOrDefault("reflective_affix", true);
-        r11 = CONFIG.getOrDefault("magnetic_affix", true);
-        r12 = CONFIG.getOrDefault("dampening_affix", true);
-        r13 = CONFIG.getOrDefault("lively_affix", true);
-        r14 = CONFIG.getOrDefault("blinded_affix", true);
-        r15 = CONFIG.getOrDefault("paralyzing_affix", true);
+        r1 = config.getOrDefault("hasty_affix", true);
+        r2 = config.getOrDefault("arctic_affix", true);
+        r3 = config.getOrDefault("molten_affix", true);
+        r4 = config.getOrDefault("desecrating_affix", true);
+        r5 = config.getOrDefault("plagued_affix", true);
+        r6 = config.getOrDefault("infected_affix", true);
+        r7 = config.getOrDefault("adaptive_affix", true);
+        r8 = config.getOrDefault("knocking_affix", true);
+        r9 = config.getOrDefault("shielding_affix", true);
+        r10 = config.getOrDefault("reflective_affix", true);
+        r11 = config.getOrDefault("magnetic_affix", true);
+        r12 = config.getOrDefault("dampening_affix", true);
+        r13 = config.getOrDefault("lively_affix", true);
+        r14 = config.getOrDefault("blinded_affix", true);
+        r15 = config.getOrDefault("paralyzing_affix", true);
     }
 
     private String defaultConfig(String filename) {
@@ -204,13 +218,13 @@ public class ChampionsConfigAffixes {
     }
 
     public static ChampionsConfigAffixes get() {
-        if (first_tick) {
+        if (firstTick) {
             Champions.LOGGER.info("Registering champions_affixes");
-            first_tick = false;
+            firstTick = false;
         }
-        if (INSTANCE == null) {
-            INSTANCE = new ChampionsConfigAffixes();
+        if (instance == null) {
+            instance = new ChampionsConfigAffixes();
         }
-        return INSTANCE;
+        return instance;
     }
 }

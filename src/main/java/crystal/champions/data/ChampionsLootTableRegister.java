@@ -1,7 +1,7 @@
 package crystal.champions.data;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
@@ -19,7 +19,7 @@ public class ChampionsLootTableRegister implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LootTableEvents.MODIFY.register((key, tableBuilder, source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, wrapperLookup) -> {
             if (source.isBuiltin() && key.getValue().getPath().startsWith("entities/")) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1.0f));

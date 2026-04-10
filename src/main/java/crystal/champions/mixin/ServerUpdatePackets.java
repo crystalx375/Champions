@@ -1,5 +1,6 @@
 package crystal.champions.mixin;
 
+import crystal.champions.Champions;
 import crystal.champions.IChampions;
 import crystal.champions.util.net.ChampionsNetworking;
 import crystal.champions.util.net.Payload;
@@ -25,14 +26,13 @@ import java.util.*;
  */
 @Mixin(MobEntity.class)
 public abstract class ServerUpdatePackets extends LivingEntity implements IChampions {
-    @Shadow
-    protected abstract void removeFromDimension();
-
-    @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
     protected ServerUpdatePackets(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
         super(type, world);
     }
+
+    @Override @Shadow protected abstract void removeFromDimension();
+    @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
     /**
      * Сделал так, чтобы отправлял разные пакеты, и с ними уже можно делать хоть что-то
@@ -44,36 +44,39 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
 
         Set<UUID> currentIds = new HashSet<>();
         MobEntity mob = (MobEntity) (Object) this;
-        boolean Bosses = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+        final boolean BOSSES = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
 
         List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
                 ServerPlayerEntity.class, this.getBoundingBox().expand(80.0), p -> true
         );
 
         for (ServerPlayerEntity player : nearby) {
+            if (!ServerPlayNetworking.canSend(player, Payload.ChampionUpdate.SERVER_UPDATE_ID)) return;
+
             UUID uuid = player.getUuid();
             double distance = player.squaredDistanceTo(this);
 
-            if (ServerPlayNetworking.canSend(player, Payload.ChampionUpdate.ID)) {
-                if (!Bosses) {
-                    if (distance <= 1600) {
-                        if (distance <= 225.0) {
-                            ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
-                            trackedPlayerIds.add(uuid);
-                            currentIds.add(uuid);
-                        }
-                        ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
+            if (!BOSSES) {
+                if (distance <= 1600) {
+                    if (distance <= 225.0) {
+                        ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                        trackedPlayerIds.add(uuid);
+                        currentIds.add(uuid);
                     }
-                } else {
-                    ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
                     ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
-                    trackedPlayerIds.add(uuid);
-                    currentIds.add(uuid);
                 }
+            } else {
+                ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                trackedPlayerIds.add(uuid);
+                currentIds.add(uuid);
             }
         }
+        removeIterator(currentIds, mob);
+    }
 
-        // remover
+    @Unique
+    private void removeIterator(Set<UUID> currentIds, MobEntity mob) {
         Iterator<UUID> it = trackedPlayerIds.iterator();
         while (it.hasNext()) {
             UUID id = it.next();
@@ -84,7 +87,7 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
                         ChampionsNetworking.sendRemove(player, mob);
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    Champions.LOGGER.error("Failed to remove player uuid");
                 }
                 it.remove();
             }

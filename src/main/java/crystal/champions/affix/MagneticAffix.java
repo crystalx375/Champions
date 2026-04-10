@@ -1,10 +1,9 @@
 package crystal.champions.affix;
 
+import crystal.champions.config.ChampionsConfigAffixes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.Vec3d;
-
-import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 /**
  * MagneticAffix
@@ -16,13 +15,15 @@ public class MagneticAffix extends Affix {
         super("magnetic");
     }
 
+    ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
+
     @Override
     public void onAttack(LivingEntity entity, MobEntity mob) {
-        if (entity.age % magneticCooldown <= magneticPullTime) return;
+        if (entity.age % config.magneticCooldown <= config.magneticPullTime) return;
         LivingEntity target = mob.getTarget();
         if (target != null) {
             Vec3d pullDir = entity.getPos().subtract(target.getPos()).normalize();
-            double i = 0.01 * strength;
+            double i = 0.01 * config.strength;
             float pX = (float) (pullDir.x * i + target.getVelocity().x * 0.5);
             float pY = (float) (pullDir.y * i + target.getVelocity().y * 0.6);
             float pZ = (float) (pullDir.z * i + target.getVelocity().z * 0.5);

@@ -1,10 +1,9 @@
 package crystal.champions.affix;
 
+import crystal.champions.config.ChampionsConfigAffixes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-
-import static crystal.champions.config.ChampionsConfigAffixes.knockback;
 
 /**
  * KnockingAffix
@@ -16,6 +15,8 @@ public class KnockingAffix extends Affix {
         super("knocking");
     }
 
+    ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
+
     @Override
     public void onHurt(LivingEntity champion, LivingEntity target) {
         float yaw = champion.getYaw();
@@ -23,7 +24,7 @@ public class KnockingAffix extends Affix {
         double z = Math.cos(yaw * 0.017453292F);
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1));
         target.teleport(target.getX(), target.getY() + 0.1, target.getZ(), true);
-        target.addVelocity(knockback * x, knockback * 0.3, knockback * z);
+        target.addVelocity(config.knockback * x, config.knockback * 0.3, config.knockback * z);
         target.velocityModified = true;
     }
 }

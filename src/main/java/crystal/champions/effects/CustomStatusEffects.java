@@ -7,11 +7,16 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 public class CustomStatusEffects {
+    private CustomStatusEffects() {
+        /* This utility class should not be instantiated */
+    }
+
     public static final RegistryEntry<StatusEffect> STUN = reg("stun", new StunStatusEffect());
 
     private static RegistryEntry<StatusEffect> reg(String id, StatusEffect statusEffect) {
         return Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of("champions", id), statusEffect);
     }
     public static void registerEffects() {
+        // Register
     }
 }

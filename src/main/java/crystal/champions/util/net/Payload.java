@@ -1,5 +1,6 @@
 package crystal.champions.util.net;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -12,8 +13,10 @@ import net.minecraft.util.Uuids;
 import java.util.UUID;
 
 public abstract class Payload implements CustomPayload {
+    private static final String CHAMPIONS = "champions";
+
     public record ChampionUpdate(UUID uuid, Text name, int tier, String affixes, float health, float maxHealth) implements CustomPayload {
-        public static final Id<ChampionUpdate> ID = new Id<>(Identifier.of("champions", "update_hud"));
+        public static final Id<ChampionUpdate> SERVER_UPDATE_ID = new Id<>(Identifier.of(CHAMPIONS, "update_hud"));
         public static final PacketCodec<RegistryByteBuf, ChampionUpdate> CODEC = PacketCodec.tuple(
                 Uuids.PACKET_CODEC, ChampionUpdate::uuid,
                 TextCodecs.REGISTRY_PACKET_CODEC, ChampionUpdate::name,
@@ -23,10 +26,12 @@ public abstract class Payload implements CustomPayload {
                 PacketCodecs.FLOAT, ChampionUpdate::maxHealth,
                 ChampionUpdate::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return ID; }
+        @Override public Id<? extends CustomPayload> getId() { return SERVER_UPDATE_ID; }
     }
+
+
     public record ChampionUpdateCl(UUID uuid, Text name, int tier, String affixes, float health, float maxHealth) implements CustomPayload {
-        public static final Id<ChampionUpdateCl> ID = new Id<>(Identifier.of("champions", "update_client_hud"));
+        public static final Id<ChampionUpdateCl> CLIENT_UPDATE_ID = new Id<>(Identifier.of(CHAMPIONS, "update_client_hud"));
         public static final PacketCodec<RegistryByteBuf, ChampionUpdateCl> CODEC = PacketCodec.tuple(
                 Uuids.PACKET_CODEC, ChampionUpdateCl::uuid,
                 TextCodecs.REGISTRY_PACKET_CODEC, ChampionUpdateCl::name,
@@ -36,14 +41,22 @@ public abstract class Payload implements CustomPayload {
                 PacketCodecs.FLOAT, ChampionUpdateCl::maxHealth,
                 ChampionUpdateCl::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return ID; }
+        @Override public Id<? extends CustomPayload> getId() { return CLIENT_UPDATE_ID; }
     }
+
+
     public record ChampionRemove(UUID uuid) implements CustomPayload {
-        public static final Id<ChampionRemove> ID = new Id<>(Identifier.of("champions", "remove_hud"));
+        public static final Id<ChampionRemove> REMOVE_ID = new Id<>(Identifier.of(CHAMPIONS, "remove_hud"));
         public static final PacketCodec<RegistryByteBuf, ChampionRemove> CODEC = PacketCodec.tuple(
                 Uuids.PACKET_CODEC, ChampionRemove::uuid,
                 ChampionRemove::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return ID; }
+        @Override public Id<? extends CustomPayload> getId() { return REMOVE_ID; }
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdate.SERVER_UPDATE_ID, Payload.ChampionUpdate.CODEC);
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, Payload.ChampionUpdateCl.CODEC);
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionRemove.REMOVE_ID, Payload.ChampionRemove.CODEC);
     }
 }

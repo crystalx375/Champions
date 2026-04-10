@@ -10,25 +10,28 @@ import java.util.Map;
  * Регистрация всех аффиксов, чтобы не по отдельности их делать
  */
 public class AffixRegistry {
-
+    private AffixRegistry() {
+        /* This utility class should not be instantiated */
+    }
     public static final Map<String, Affix> ALL_AFFIXES = new HashMap<>();
+    public static void affixesRegister() {
+        ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
 
-    public static void init() {
-        if (ChampionsConfigAffixes.r1) register(new HastyAffix());
-        if (ChampionsConfigAffixes.r2) register(new ArcticAffix());
-        if (ChampionsConfigAffixes.r3) register(new MoltenAffix());
-        if (ChampionsConfigAffixes.r4) register(new DesecratingAffix());
-        if (ChampionsConfigAffixes.r5) register(new PlaguedAffix());
-        if (ChampionsConfigAffixes.r6) register(new InfectedAffix());
-        if (ChampionsConfigAffixes.r7) register(new AdaptiveAffix());
-        if (ChampionsConfigAffixes.r8) register(new KnockingAffix());
-        if (ChampionsConfigAffixes.r9) register(new ShieldingAffix());
-        if (ChampionsConfigAffixes.r10) register(new ReflectionAffix());
-        if (ChampionsConfigAffixes.r11) register(new MagneticAffix());
-        if (ChampionsConfigAffixes.r12) register(new DampingAffix());
-        if (ChampionsConfigAffixes.r13) register(new LivelyAffix());
-        if (ChampionsConfigAffixes.r14) register(new BlindedAffix());
-        if (ChampionsConfigAffixes.r15) register(new ParalyzingAffix());
+        if (config.r1) register(new HastyAffix());
+        if (config.r2) register(new ArcticAffix());
+        if (config.r3) register(new MoltenAffix());
+        if (config.r4) register(new DesecratingAffix());
+        if (config.r5) register(new PlaguedAffix());
+        if (config.r6) register(new InfectedAffix());
+        if (config.r7) register(new AdaptiveAffix());
+        if (config.r8) register(new KnockingAffix());
+        if (config.r9) register(new ShieldingAffix());
+        if (config.r10) register(new ReflectionAffix());
+        if (config.r11) register(new MagneticAffix());
+        if (config.r12) register(new DampingAffix());
+        if (config.r13) register(new LivelyAffix());
+        if (config.r14) register(new BlindedAffix());
+        if (config.r15) register(new ParalyzingAffix());
 
         Champions.LOGGER.info("Registered {} champion affixes", ALL_AFFIXES.size());
     }

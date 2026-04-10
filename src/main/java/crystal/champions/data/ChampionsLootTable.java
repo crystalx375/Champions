@@ -44,7 +44,7 @@ public class ChampionsLootTable extends SimpleFabricLootTableProvider {
         if (tier >= 5) return;
         RegistryKey<LootTable> key = RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("champions", "champions/tier_" + tier));
         exporter.accept(key, LootTable.builder().pool(LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create((float) tier))
+                        .rolls(ConstantLootNumberProvider.create(tier))
                         .with(entry)
                 )
         );

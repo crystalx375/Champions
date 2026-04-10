@@ -1,6 +1,5 @@
 package crystal.champions.mixin;
 
-import crystal.champions.Champions;
 import crystal.champions.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
@@ -23,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static crystal.champions.ChampionsColorServer.getColor;
-
 @Mixin(LivingEntity.class)
 public abstract class EntityDataMixin extends Entity implements IChampions {
     /**
@@ -35,58 +32,58 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
         super(type, world);
     }
 
-    @Unique private int CHAMPION_TIER = 0;
-    @Unique private String AFFIXES = "";
-    @Unique private String ADAPT_TYPE = "";
-    @Unique private int ADAPT_COUNT = 0;
-    @Unique private boolean IS_SHIELDING = false;
+    @Unique private int tier = 0;
+    @Unique private String affixes = "";
+    @Unique private String type = "";
+    @Unique private int adaptCount = 0;
+    @Unique private boolean isShielding = false;
 
     /**
      * Устанавливаем сеттеры и геттеры
      */
     @Override
     public int champions$getChampionTier() {
-        return CHAMPION_TIER;
+        return tier;
     }
     @Override
-    public void champions$setChampionTier(int tier) {
-        CHAMPION_TIER = tier;
+    public void champions$setChampionTier(int t) {
+        tier = t;
     }
     // affixes
     @Override
     public String champions$getAffixesString() {
-        return AFFIXES;
+        return affixes;
     }
     @Override
-    public void champions$setAffixesString(String affixes) {
-        AFFIXES = affixes;
+    public void champions$setAffixesString(String a) {
+        affixes = a;
     }
     // adaptive
     @Override
     public String champions$getAdaptationType() {
-        return ADAPT_TYPE;
+        return type;
     }
     @Override
-    public void champions$setAdaptationType(String type) {
-        ADAPT_TYPE = type;
+    public void champions$setAdaptationType(String t) {
+        type = t;
     }
     @Override
     public int champions$getAdaptation() {
-        return ADAPT_COUNT;
+        return adaptCount;
     }
     @Override
     public void champions$setAdaptation(int count) {
-        ADAPT_COUNT = count;
+        adaptCount = count;
     }
     // shield
     @Override
     public boolean champions$isShielding() {
-        return IS_SHIELDING;
+        return isShielding;
     }
 
     @Override
     public void champions$setShielding(boolean value) {
-        IS_SHIELDING = value;
+        isShielding = value;
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -98,32 +95,16 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
                 if (entity instanceof MobEntity mob) affix.onAttack(entity, mob);
                 if (entity.age % 40 == 0) {
                     entity.addStatusEffect(new StatusEffectInstance(
-                            StatusEffects.SPEED, 40, CHAMPION_TIER / 3, false, false, false));
+                            StatusEffects.SPEED, 40, tier / 3, false, false, false));
                 }
             });
-        } else {
-            if (champions$getChampionTier() > 0) {
-                spawnChampionParticles(entity);
-            }
-        }
-    }
-
-    @Unique
-    private void spawnChampionParticles(LivingEntity entity) {
-        if (entity.age % 4 == 0) {
-            int color = getColor(champions$getChampionTier());
-            entity.getWorld().addParticle(
-                    Champions.CHAMPIONS_SPELL,
-                    entity.getParticleX(0.5), entity.getRandomBodyY(), entity.getParticleZ(0.5),
-                    color, 0, 0
-            );
         }
     }
 
     // Array
     @Override
     public List<Affix> champions$getActiveAffixes() {
-        String raw = AFFIXES;
+        String raw = affixes;
         if (raw.isEmpty()) return Collections.emptyList();
         return Arrays.stream(raw.split(","))
                 .map(AffixRegistry.ALL_AFFIXES::get).filter(Objects::nonNull).toList();
@@ -131,28 +112,34 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
 
 
     // NBT
+    @Unique private static final String KEY_TIER = "tier";
+    @Unique private static final String KEY_AFFIXES = "affixes";
+    @Unique private static final String KEY_ADAPTATION_TYPE = "adaptationType";
+    @Unique private static final String KEY_ADAPTATION_COUNT = "adaptationCount";
+
+
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void writeChampionData(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putInt("tier", this.champions$getChampionTier());
-        nbt.putString("affixes", this.champions$getAffixesString());
+        nbt.putInt(KEY_TIER, this.champions$getChampionTier());
+        nbt.putString(KEY_AFFIXES, this.champions$getAffixesString());
 
-        nbt.putString("adaptationType", this.champions$getAdaptationType());
-        nbt.putInt("adaptationCount", this.champions$getAdaptation());
+        nbt.putString(KEY_ADAPTATION_TYPE, this.champions$getAdaptationType());
+        nbt.putInt(KEY_ADAPTATION_COUNT, this.champions$getAdaptation());
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readChampionData(NbtCompound nbt, CallbackInfo ci) {
-        if (nbt.contains("tier")) {
-            this.champions$setChampionTier(nbt.getInt("tier"));
+        if (nbt.contains(KEY_TIER)) {
+            this.champions$setChampionTier(nbt.getInt(KEY_TIER));
         }
-        if (nbt.contains("affixes")) {
-            this.champions$setAffixesString(nbt.getString("affixes"));
+        if (nbt.contains(KEY_AFFIXES)) {
+            this.champions$setAffixesString(nbt.getString(KEY_AFFIXES));
         }
-        if (nbt.contains("adaptationType")) {
-            this.champions$setAdaptationType(nbt.getString("adaptationType"));
+        if (nbt.contains(KEY_ADAPTATION_TYPE)) {
+            this.champions$setAdaptationType(nbt.getString(KEY_ADAPTATION_TYPE));
         }
-        if (nbt.contains("adaptationCount")) {
-            this.champions$setAdaptation(nbt.getInt("adaptationCount"));
+        if (nbt.contains(KEY_ADAPTATION_COUNT)) {
+            this.champions$setAdaptation(nbt.getInt(KEY_ADAPTATION_COUNT));
         }
     }
 }

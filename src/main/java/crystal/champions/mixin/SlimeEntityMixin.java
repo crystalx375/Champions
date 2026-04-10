@@ -26,7 +26,7 @@ import java.util.List;
 @Mixin(SlimeEntity.class)
 public abstract class SlimeEntityMixin extends Entity {
 
-    public SlimeEntityMixin(EntityType<?> type, World world) {
+    protected SlimeEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
