@@ -21,9 +21,9 @@ public class ChampionsParticle extends SpriteBillboardParticle {
 
         this.velocityY = velocityY * 1.1D;
 
-        this.red = (float) (hexColor >> 16 & 255) / 255.0F;
-        this.green = (float) (hexColor >> 8 & 255) / 255.0F;
-        this.blue = (float) (hexColor & 255) / 255.0F;
+        this.red = (hexColor >> 16 & 255) / 255.0F;
+        this.green = (hexColor >> 8 & 255) / 255.0F;
+        this.blue = (hexColor & 255) / 255.0F;
 
         try {
             this.setSpriteForAge(spriteProvider);

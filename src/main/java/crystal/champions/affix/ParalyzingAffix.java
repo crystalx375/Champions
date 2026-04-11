@@ -1,12 +1,11 @@
 package crystal.champions.affix;
 
+import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.effects.CustomStatusEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
 import java.util.Random;
-
-import static crystal.champions.config.ChampionsConfigAffixes.*;
 
 public class ParalyzingAffix extends Affix{
 
@@ -14,11 +13,13 @@ public class ParalyzingAffix extends Affix{
         super("paralyzing");
     }
 
+    Random rnd = new Random();
+    ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
+
     @Override
     public void onHurt(LivingEntity champion, LivingEntity target) {
-        Random rnd = new Random();
-        if (rnd.nextFloat() < paralyzeChance) {
-            target.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.STUN, paralyzeDuration, 0));
+        if (rnd.nextFloat() < config.paralyzeChance) {
+            target.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.STUN, config.paralyzeDuration, 0));
         }
     }
 }

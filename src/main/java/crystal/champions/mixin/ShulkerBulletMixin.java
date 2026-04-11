@@ -24,18 +24,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ShulkerBulletEntity.class)
 public abstract class ShulkerBulletMixin extends Entity implements IBullet {
-    // 1. Создаем ключи для синхронизации
-    @Unique
-    private static final TrackedData<Boolean> ARCTIC = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
-    @Unique
-    private static final TrackedData<Boolean> MOLTEN = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
+    @Unique private static final TrackedData<Boolean> ARCTIC = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
+    @Unique private static final TrackedData<Boolean> MOLTEN = DataTracker.registerData(ShulkerBulletMixin.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public ShulkerBulletMixin(EntityType<?> type, World world) { super(type, world); }
+    protected ShulkerBulletMixin(EntityType<?> type, World world) { super(type, world); }
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
-    protected void initChampionTracker(CallbackInfo ci) {
-        this.dataTracker.startTracking(ARCTIC, false);
-        this.dataTracker.startTracking(MOLTEN, false);
+    protected void initChampionTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(ARCTIC, false);
+        builder.add(MOLTEN, false);
     }
 
     @Override

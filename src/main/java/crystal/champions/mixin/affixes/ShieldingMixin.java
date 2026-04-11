@@ -16,7 +16,7 @@ public class ShieldingMixin {
      */
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void applyShielding(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if ((Object)this instanceof IChampions champion && champion.champions$isShielding()) {
+        if (this instanceof IChampions champion && champion.champions$isShielding()) {
             cir.setReturnValue(false);
         }
     }

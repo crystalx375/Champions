@@ -4,60 +4,60 @@ import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
 
 public class ChampionsConfigClient {
-    private static final int version = 1;
-    private static ChampionsConfigClient INSTANCE;
-    static boolean first_tick = true;
+    private static final int VERSION = 1;
+    private static ChampionsConfigClient instance;
+    private static boolean firstTick = true;
 
-    public static int yOffsetStars;
-    public static int yOffsetText;
-    public static int yOffsetBar;
-    public static int yOffsetAffixes;
+    public final int yOffsetStars;
+    public final int yOffsetText;
+    public final int yOffsetBar;
+    public final int yOffsetAffixes;
 
-    public static int xOffsetStars;
-    public static int xOffsetText;
-    public static int xOffsetBar;
-    public static int xOffsetAffixes;
+    public final int xOffsetStars;
+    public final int xOffsetText;
+    public final int xOffsetBar;
+    public final int xOffsetAffixes;
 
-    public static short cache_client;
-    public static short cache_server;
-    public static boolean only_for_view;
+    public final short cacheClient;
+    public final short cacheServer;
+    public final boolean onlyForView;
 
-    public String hex_tier_1;
-    public String hex_tier_2;
-    public String hex_tier_3;
-    public String hex_tier_4;
-    public String hex_tier_5;
+    public final String hexTier1;
+    public final String hexTier2;
+    public final String hexTier3;
+    public final String hexTier4;
+    public final String hexTier5;
 
-    public static boolean alwaysRenderBox;
+    public final boolean alwaysRenderBox;
 
 
     private ChampionsConfigClient() {
-        SimpleConfig CONFIG = SimpleConfig.of("Champions","champions_client")
+        SimpleConfig config = SimpleConfig.of("Champions","champions_client")
                 .provider(this::defaultConfig)
-                .version(version)
+                .version(VERSION)
                 .request();
 
-        yOffsetStars = CONFIG.getOrDefault("y_offset_stars", -5);
-        yOffsetText = CONFIG.getOrDefault("y_offset_text", 7);
-        yOffsetBar = CONFIG.getOrDefault("y_offset_bar", 19);
-        yOffsetAffixes = CONFIG.getOrDefault("y_offset_affixes", 29);
+        this.yOffsetStars = config.getOrDefault("y_offset_stars", -5);
+        this.yOffsetText = config.getOrDefault("y_offset_text", 7);
+        this.yOffsetBar = config.getOrDefault("y_offset_bar", 19);
+        this.yOffsetAffixes = config.getOrDefault("y_offset_affixes", 29);
 
-        xOffsetStars = CONFIG.getOrDefault("x_offset_stars", 0);
-        xOffsetText = CONFIG.getOrDefault("x_offset_text", 0);
-        xOffsetBar = CONFIG.getOrDefault("x_offset_bar", 0);
-        xOffsetAffixes = CONFIG.getOrDefault("x_offset_affixes", 0);
+        this.xOffsetStars = config.getOrDefault("x_offset_stars", 0);
+        this.xOffsetText = config.getOrDefault("x_offset_text", 0);
+        this.xOffsetBar = config.getOrDefault("x_offset_bar", 0);
+        this.xOffsetAffixes = config.getOrDefault("x_offset_affixes", 0);
 
-        this.hex_tier_1 = CONFIG.getOrDefault("hex_tier_1", "#FFFF55");
-        this.hex_tier_2 = CONFIG.getOrDefault("hex_tier_2", "#F57C2C");
-        this.hex_tier_3 = CONFIG.getOrDefault("hex_tier_3", "#46DFFA");
-        this.hex_tier_4 = CONFIG.getOrDefault("hex_tier_4", "#8823DB");
-        this.hex_tier_5 = CONFIG.getOrDefault("hex_tier_5", "#F98AFF");
+        this.hexTier1 = config.getOrDefault("hex_tier_1", "#FFFF55");
+        this.hexTier2 = config.getOrDefault("hex_tier_2", "#F57C2C");
+        this.hexTier3 = config.getOrDefault("hex_tier_3", "#46DFFA");
+        this.hexTier4 = config.getOrDefault("hex_tier_4", "#8823DB");
+        this.hexTier5 = config.getOrDefault("hex_tier_5", "#F98AFF");
 
-        alwaysRenderBox = CONFIG.getOrDefault("always_render", false);
+        this.alwaysRenderBox = config.getOrDefault("always_render", false);
 
-        cache_client = (short) CONFIG.getOrDefault("cache_client", 1000);
-        cache_server = (short) CONFIG.getOrDefault("cache_server", 5000);
-        only_for_view = CONFIG.getOrDefault("only_for_view", false);
+        this.cacheClient = (short) config.getOrDefault("cache_client", 1000);
+        this.cacheServer = (short) config.getOrDefault("cache_server", 5000);
+        this.onlyForView = config.getOrDefault("only_for_view", false);
     }
 
     private String defaultConfig(String filename) {
@@ -94,13 +94,13 @@ public class ChampionsConfigClient {
     }
 
     public static ChampionsConfigClient get() {
-        if (first_tick) {
-            Champions.LOGGER.info("Registering champions_client");
-            first_tick = false;
+        if (firstTick) {
+            Champions.LOGGER.info("Registering champions_common");
+            firstTick = false;
         }
-        if (INSTANCE == null) {
-            INSTANCE = new ChampionsConfigClient();
+        if (instance == null) {
+            instance = new ChampionsConfigClient();
         }
-        return INSTANCE;
+        return instance;
     }
 }

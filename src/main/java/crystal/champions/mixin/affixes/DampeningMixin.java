@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import static crystal.champions.config.ChampionsConfigAffixes.dampeningAmount;
+import static crystal.champions.config.ChampionsConfigAffixes.get;
 
 @Mixin(LivingEntity.class)
 public class DampeningMixin {
@@ -20,9 +20,10 @@ public class DampeningMixin {
      */
     @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
     private float applyDampening(float amount, DamageSource source) {
-        if ((Object)this instanceof IChampions champion && champion.champions$getAffixesString().contains("dampening")) {
-            if (!source.isIn(DamageTypeTags.IS_PROJECTILE) || !source.isIn(DamageTypeTags.IS_FIRE)) return amount * dampeningAmount;
-        }
+        if (this instanceof IChampions champion && champion.champions$getAffixesString().contains("dampening")
+                && (!source.isIn(DamageTypeTags.IS_PROJECTILE)
+                || !source.isIn(DamageTypeTags.IS_FIRE))) return amount * get().dampeningAmount;
+
         return amount;
     }
 }

@@ -4,16 +4,17 @@ import net.minecraft.util.math.random.Random;
 
 import java.util.List;
 
-import static crystal.champions.config.ChampionsConfigServer.*;
+import static crystal.champions.config.ChampionsConfigServer.get;
 
 public record ChampionRank(int tier, int affixes, int weight, float growth_h, float growth_s) {
+
     public static final List<ChampionRank> RANKS = List.of(
-            new ChampionRank(0, 0, w0, 1.0f, 1.0f),
-            new ChampionRank(1, a1, w1, gh1, gs1),
-            new ChampionRank(2, a2, w2, gh2, gs2),
-            new ChampionRank(3, a3, w3, gh3, gs3),
-            new ChampionRank(4, a4, w4, gh4, gs4),
-            new ChampionRank(5, a5, w5, gh5, gs5)
+            new ChampionRank(0, 0, get().w0, 1.0f, 1.0f),
+            new ChampionRank(1, get().a1, get().w1, get().gh1, get().gs1),
+            new ChampionRank(2, get().a2, get().w2, get().gh2, get().gs2),
+            new ChampionRank(3, get().a3, get().w3, get().gh3, get().gs3),
+            new ChampionRank(4, get().a4, get().w4, get().gh4, get().gs4),
+            new ChampionRank(5, get().a5, get().w5, get().gh5, get().gs5)
     );
     private static final int TOTAL_WEIGHT;
     static {
@@ -36,13 +37,13 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
                 return rank;
             }
         }
-        return RANKS.get(0);
+        return RANKS.getFirst();
     }
 
 
     public static ChampionRank getBossRank(Random random) {
         List<ChampionRank> ranks = RANKS.stream()
-                .filter(r -> r.tier() <= maxBossTier)
+                .filter(r -> r.tier() <= get().maxBossTier)
                 .toList();
         int totalWeight = 0;
         for (ChampionRank rank : ranks) {
@@ -53,6 +54,6 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
             if (roll < rank.weight()) return rank;
             roll -= rank.weight();
         }
-        return ranks.get(0);
+        return ranks.getFirst();
     }
 }

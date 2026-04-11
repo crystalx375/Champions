@@ -6,8 +6,6 @@ import crystal.champions.util.ChampionRank;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
@@ -15,7 +13,7 @@ import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PolarBearEntity;
 import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,8 +31,7 @@ import java.util.List;
 public abstract class MobEntityMixin implements IChampions {
 
     @Inject(method = "initialize", at = @At("TAIL"))
-    private void applyChampionStats(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-                                    EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+    private void applyChampionStats(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         MobEntity mob = (MobEntity) (Object) this;
 
         boolean isAggressive = mob instanceof HostileEntity || mob instanceof Angerable
@@ -84,14 +81,10 @@ public abstract class MobEntityMixin implements IChampions {
     }
 
     @Unique
-    private void modifyAttribute(MobEntity entity, EntityAttribute attribute, float m) {
-        EntityAttributeInstance instance = entity.getAttributeInstance(attribute);
+    private void modifyAttribute(MobEntity entity, RegistryEntry<EntityAttribute> attribute, float m) {
+        var instance = entity.getAttributeInstance(attribute);
         if (instance != null) {
-            instance.addPersistentModifier(new EntityAttributeModifier(
-                    "champion_modifier",
-                    m - 1.0,
-                    EntityAttributeModifier.Operation.MULTIPLY_BASE
-            ));
+            instance.setBaseValue(instance.getBaseValue() * m);
         }
     }
 }

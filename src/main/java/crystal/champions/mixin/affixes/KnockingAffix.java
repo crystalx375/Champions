@@ -18,14 +18,13 @@ public class KnockingAffix {
      */
     @Inject(method = "tryAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private void onChampionsAttack(Entity target, CallbackInfoReturnable<Boolean> cir) {
-        if (target instanceof LivingEntity lTarget && (Object) this instanceof IChampions champion) {
-            if (champion.champions$getAffixesString().contains("knocking")) {
-                Affix affix = AffixRegistry.ALL_AFFIXES.get("knocking");
-                if (affix != null) {
-                    if (lTarget.getRecentDamageSource() != null) {
-                        affix.onHurt((LivingEntity) (Object) this, lTarget);
-                    }
-                }
+        if (target instanceof LivingEntity lTarget && this instanceof IChampions champion
+            && champion.champions$getAffixesString().contains("knocking")) {
+
+        Affix affix = AffixRegistry.ALL_AFFIXES.get("knocking");
+
+        if (affix != null && lTarget.getRecentDamageSource() != null) {
+                affix.onHurt((LivingEntity) (Object) this, lTarget);
             }
         }
     }

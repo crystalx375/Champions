@@ -7,9 +7,6 @@ import java.util.List;
 public interface IChampions {
     int champions$getChampionTier();
     void champions$setChampionTier(int tier);
-    default boolean champions$isChampion() {
-        return champions$getChampionTier() > 0;
-    }
     // affixes
     String champions$getAffixesString();
     void champions$setAffixesString(String affixes);

@@ -21,16 +21,19 @@
  */
 package crystal.champions.util;
 
+import com.google.gson.JsonSyntaxException;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -44,7 +47,7 @@ public class SimpleConfig {
     public interface DefaultConfig {
         String get( String namespace );
 
-        static String empty( String namespace ) {
+        static String empty(String namespace) {
             return "";
         }
     }
@@ -56,7 +59,7 @@ public class SimpleConfig {
         private DefaultConfig provider;
         private int version;
 
-        private ConfigRequest(File file, String filename ) {
+        private ConfigRequest(File file, String filename) {
             this.file = file;
             this.filename = filename;
             this.provider = DefaultConfig::empty;
@@ -102,7 +105,7 @@ public class SimpleConfig {
      * @param filename - name of the config file
      * @return new config request object
      */
-    public static ConfigRequest of( String filename ) {
+    public static ConfigRequest of(String filename) {
         Path path = FabricLoader.getInstance().getConfigDir();
         return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
     }
@@ -111,16 +114,14 @@ public class SimpleConfig {
      * @author Crystal
      * Added folder with config
      */
-    public static ConfigRequest of( String folder, String filename ) {
+    public static ConfigRequest of(String folder, String filename) {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(folder);
         return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
     }
 
     private void createConfig() throws IOException {
-
         // try creating missing files
-        request.file.getParentFile().mkdirs();
-        Files.createFile( request.file.toPath() );
+        Files.createFile(request.file.toPath());
 
         // write default config data
         PrintWriter writer = new PrintWriter(request.file, StandardCharsets.UTF_8);
@@ -132,19 +133,22 @@ public class SimpleConfig {
     }
 
     private void loadConfig() throws IOException {
-        Scanner reader = new Scanner( request.file );
-        for( int line = 1; reader.hasNextLine(); line ++ ) {
-            parseConfigEntry( reader.nextLine(), line );
+        try (Scanner reader = new Scanner(request.file)){
+            for( int line = 1; reader.hasNextLine(); line ++ ) {
+                parseConfigEntry( reader.nextLine(), line );
+            }
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Failed to load config");
         }
     }
 
-    private void parseConfigEntry( String entry, int line ) {
+    private void parseConfigEntry(String entry, int line) {
         if( !entry.isEmpty() && !entry.startsWith( "#" ) ) {
             String[] parts = entry.split("=", 2);
             if( parts.length == 2 ) {
                 config.put( parts[0].trim(), parts[1].trim() );
             } else {
-                throw new RuntimeException("Syntax error in config file on line " + line + "!");
+                throw new JsonSyntaxException("Syntax error in config file on line " + line + "!");
             }
         }
     }
@@ -154,17 +158,17 @@ public class SimpleConfig {
         String identifier = "Config '" + request.filename + "'";
 
         if (request.file.exists() && isOutdated() ) {
-            LOGGER.warn( identifier + " is outdated, backing up and regenerating..." );
-            Remove();
+            LOGGER.warn("{} is outdated, backing up and regenerating...", identifier);
+            deleteOld();
         }
 
-        if(!request.file.exists() ) {
-            LOGGER.info( identifier + " is missing, generating default one..." );
+        if(!request.file.exists()) {
+            LOGGER.info("{} is missing, generating default one...", identifier);
 
             try {
                 createConfig();
             } catch (IOException e) {
-                LOGGER.error( identifier + " failed to generate!" );
+                LOGGER.error("{} failed to generate!", identifier);
                 LOGGER.trace( e );
                 broken = true;
             }
@@ -174,7 +178,7 @@ public class SimpleConfig {
             try {
                 loadConfig();
             } catch (Exception e) {
-                LOGGER.error( identifier + " failed to load!" );
+                LOGGER.error("{} failed to load!", identifier);
                 LOGGER.trace( e );
                 broken = true;
             }
@@ -189,8 +193,7 @@ public class SimpleConfig {
      * @return  value corresponding to the given key
      * @see     SimpleConfig#getOrDefault
      */
-    @Deprecated
-    public String get( String key ) {
+    public String get(String key) {
         return config.get( key );
     }
 
@@ -200,7 +203,7 @@ public class SimpleConfig {
      *
      * @return  value corresponding to the given key, or the default value
      */
-    public String getOrDefault( String key, String def ) {
+    public String getOrDefault(String key, String def) {
         String val = get(key);
         return val == null ? def : val;
     }
@@ -211,7 +214,7 @@ public class SimpleConfig {
      *
      * @return  value corresponding to the given key, or the default value
      */
-    public int getOrDefault( String key, int def ) {
+    public int getOrDefault(String key, int def) {
         try {
             return Integer.parseInt( get(key) );
         } catch (Exception e) {
@@ -225,7 +228,7 @@ public class SimpleConfig {
      *
      * @return  value corresponding to the given key, or the default value
      */
-    public boolean getOrDefault( String key, boolean def ) {
+    public boolean getOrDefault(String key, boolean def) {
         String val = get(key);
         if( val != null ) {
             return val.equalsIgnoreCase("true");
@@ -240,9 +243,9 @@ public class SimpleConfig {
      *
      * @return  value corresponding to the given key, or the default value
      */
-    public double getOrDefault( String key, double def ) {
+    public double getOrDefault(String key, double def) {
         try {
-            return Double.parseDouble( get(key) );
+            return Double.parseDouble(get(key));
         } catch (Exception e) {
             return def;
         }
@@ -260,23 +263,19 @@ public class SimpleConfig {
     }
 
     /**
-     * deletes the config file from the filesystem
-     *
-     * @return true if the operation was successful
-     */
-    public boolean delete() {
-        LOGGER.warn( "Config '" + request.filename + "' was removed from existence! Restart the game to regenerate it." );
-        return request.file.delete();
-    }
-
-    /**
      * @author Crystal
      * Recreate File and create outdated file
      */
-    private void Remove() {
-        File backup = new File(request.file.getPath() + ".old");
-        if (backup.exists()) backup.delete();
-        request.file.renameTo(backup);
+    private void deleteOld() {
+        Path source = request.file.toPath();
+        Path backup = source.resolveSibling(source.getFileName() + ".old");
+        try {
+            Files.deleteIfExists(backup);
+            Files.move(source, backup, StandardCopyOption.REPLACE_EXISTING);
+
+        } catch (IOException e) {
+            LOGGER.error("Failed to create backup for {}", source, e);
+        }
     }
     /**
      * @author Crystal

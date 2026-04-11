@@ -32,10 +32,8 @@ public class CreeperEntityMixin extends HostileEntity {
     }
     @Inject(method = "tick", at = @At("HEAD"))
     private void championsTick(CallbackInfo ci) {
-        if (this instanceof IChampions champions) {
-            if (champions.champions$getChampionTier() > 3) {
+        if (this instanceof IChampions champions && champions.champions$getChampionTier() > 3) {
                 fuseTime = fuseTime + (champions.champions$getChampionTier() - 3) * 10;
-            }
         }
     }
 }

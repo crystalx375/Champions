@@ -1,5 +1,6 @@
 package crystal.champions.client.render;
 
+import crystal.champions.config.ChampionsConfigClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.MutableText;
@@ -9,9 +10,13 @@ import net.minecraft.util.Identifier;
 
 import static crystal.champions.client.render.ChampionsColor.applyColor;
 import static crystal.champions.client.render.ChampionsColor.resetColor;
-import static crystal.champions.config.ChampionsConfigClient.*;
 
 public class ChampionsRender {
+
+    private ChampionsRender() {
+        /* This utility class should not be instantiated */
+    }
+
     private static final Identifier CHAMPION_STARS = Identifier.of("champions", "textures/gui/staricon.png");
     private static final Identifier CUSTOM_BARS = Identifier.of("champions", "textures/gui/custom_bars.png");
 
@@ -19,17 +24,20 @@ public class ChampionsRender {
      * Отрисовка и рендер
      * Все по порядку от верха к низу
      */
+
+    static ChampionsConfigClient config = ChampionsConfigClient.get();
+
     public static void renderChampion(DrawContext context, int centerX, int y, ChampionHudRender.ChampionData data, MinecraftClient client) {
         int color = data.color();
 
-        renderStars(context, centerX  + xOffsetStars, y + yOffsetStars, data.tier(), color);
-        MutableText title = Text.literal(getMutableText(data)).append(data.name().copy());
-        context.drawCenteredTextWithShadow(client.textRenderer, title, centerX + xOffsetText, y + yOffsetText, color);
+        renderStars(context, centerX  + config.xOffsetStars, y + config.yOffsetStars, data.tier(), color);
+        MutableText title = Text.literal(getMutableText(data)).append(data.name());
+        context.drawCenteredTextWithShadow(client.textRenderer, title, centerX + config.xOffsetText, y + config.yOffsetText, color);
 
-        renderProgressBar(context, centerX + xOffsetBar, y + yOffsetBar, data.percent(), color);
+        renderProgressBar(context, centerX + config.xOffsetBar, y + config.yOffsetBar, data.percent(), color);
 
         if (data.affixes() != null && !data.affixes().isEmpty()) {
-            renderAffixes(context, client, centerX + xOffsetAffixes, y + yOffsetAffixes, data.affixes());
+            renderAffixes(context, client, centerX + config.xOffsetAffixes, y + config.yOffsetAffixes, data.affixes());
         }
     }
 
