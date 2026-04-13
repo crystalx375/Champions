@@ -2,11 +2,17 @@ package crystal.champions.config;
 
 import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
+import net.fabricmc.loader.api.FabricLoader;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ChampionsConfigClient {
     private static final int VERSION = 1;
     private static ChampionsConfigClient instance;
-    private static boolean firstTick = true;
 
     public final int yOffsetStars;
     public final int yOffsetText;
@@ -93,11 +99,40 @@ public class ChampionsConfigClient {
                 """;
     }
 
-    public static ChampionsConfigClient get() {
-        if (firstTick) {
-            Champions.LOGGER.info("Registering champions_common");
-            firstTick = false;
+    public static void save(Map<String, Object> changes) {
+        Path path = FabricLoader.getInstance().getConfigDir()
+                .resolve("Champions").resolve("champions_client.properties");
+
+        try {
+            if (!Files.exists(path)) return;
+
+            List<String> l = Files.readAllLines(path);
+            List<String> newLines = new ArrayList<>();
+
+            for (String line : l) {
+                String trimmed = line.trim();
+                if (!trimmed.startsWith("#") && trimmed.contains("=")) {
+                    String key = trimmed.split("=")[0].trim();
+                    if (changes.containsKey(key)) {
+                        newLines.add(key + " = " + changes.get(key));
+                        continue;
+                    }
+                }
+                newLines.add(line);
+            }
+            Files.write(path, newLines);
+            Champions.LOGGER.info("Saved champions_client");
+        } catch (Exception e) {
+            Champions.LOGGER.error("Failed to save champions_client!", e);
         }
+    }
+
+    public static void reload() {
+        instance = new ChampionsConfigClient();
+        Champions.LOGGER.info("Config reloaded!");
+    }
+
+    public static ChampionsConfigClient get() {
         if (instance == null) {
             instance = new ChampionsConfigClient();
         }

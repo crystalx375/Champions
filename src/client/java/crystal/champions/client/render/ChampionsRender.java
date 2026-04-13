@@ -25,9 +25,8 @@ public class ChampionsRender {
      * Все по порядку от верха к низу
      */
 
-    static ChampionsConfigClient config = ChampionsConfigClient.get();
-
     public static void renderChampion(DrawContext context, int centerX, int y, ChampionHudRender.ChampionData data, MinecraftClient client) {
+        ChampionsConfigClient config = ChampionsConfigClient.get();
         int color = data.color();
 
         renderStars(context, centerX  + config.xOffsetStars, y + config.yOffsetStars, data.tier(), color);
@@ -54,9 +53,9 @@ public class ChampionsRender {
 
     private static void renderStars(DrawContext context, int centerX, int y, int count, int color) {
         if (count <= 0) return;
-        int sSize = 10;
-        int totalW = (count * 11);
-        int startX = centerX - (totalW / 2);
+        final int sSize = 10;
+        final int totalW = (count * 11);
+        final int startX = centerX - (totalW / 2);
 
         applyColor(context, color);
         for (int i = 0; i < count; i++) {
@@ -66,8 +65,8 @@ public class ChampionsRender {
     }
 
     private static void renderProgressBar(DrawContext context, int centerX, int y, float percent, int color) {
-        int barW = 182;
-        int barH = 5;
+        final int barW = 182;
+        final int barH = 5;
         int x = centerX - barW / 2;
 
         applyColor(context, color);

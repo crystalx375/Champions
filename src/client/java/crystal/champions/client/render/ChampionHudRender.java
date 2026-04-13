@@ -2,6 +2,7 @@ package crystal.champions.client.render;
 
 import crystal.champions.client.mixin.ClientWorldAccessor;
 import crystal.champions.client.net.ChampionDisplayInfo;
+import crystal.champions.config.ChampionsConfigClient;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -22,7 +23,6 @@ import java.util.UUID;
 import static crystal.champions.client.net.ClientPacket.activeChampions;
 import static crystal.champions.client.net.ClientPacket.activeChampionsCl;
 import static crystal.champions.client.render.ChampionsColor.getColor;
-import static crystal.champions.client.render.ChampionsRender.config;
 import static crystal.champions.client.render.ChampionsRender.renderChampion;
 
 public abstract class ChampionHudRender implements HudRenderCallback {
@@ -39,14 +39,14 @@ public abstract class ChampionHudRender implements HudRenderCallback {
     public void onHudRender(DrawContext context, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        float delta = tickCounter.getTickDelta(true);
+        final float delta = tickCounter.getTickDelta(true);
 
         if (client.player == null || client.options.hudHidden) return;
         ChampionData bestChampion = findBestChampion(client, delta);
         ChampionData bestChampionCl = findBestChampionCl(client, delta);
 
-        int cX = client.getWindow().getScaledWidth() / 2;
-        int y = 12;
+        final int cX = client.getWindow().getScaledWidth() / 2;
+        final int y = 12;
 
         if (bestChampionCl != null) { renderChampion(context, cX, y, bestChampionCl, client); }
         else if (bestChampion != null) { renderChampion(context, cX, y, bestChampion, client); }
@@ -56,7 +56,9 @@ public abstract class ChampionHudRender implements HudRenderCallback {
      * When looking render
      */
     private ChampionData findBestChampionCl(MinecraftClient client, float delta) {
-        long now = System.currentTimeMillis();
+        ChampionsConfigClient config = ChampionsConfigClient.get();
+
+        final long now = System.currentTimeMillis();
         ClientLook at = performRaycast(client, delta);
 
         if (at != null && at.check() && activeChampionsCl.containsKey(at.uuid())) {
@@ -80,6 +82,8 @@ public abstract class ChampionHudRender implements HudRenderCallback {
      * Box render
      */
     private ChampionData findBestChampion(MinecraftClient client, float delta) {
+        ChampionsConfigClient config = ChampionsConfigClient.get();
+
         if (config.onlyForView || client.world == null || client.player == null) return null;
         ChampionData best = null;
         final long now = System.currentTimeMillis();
@@ -90,10 +94,11 @@ public abstract class ChampionHudRender implements HudRenderCallback {
             Entity targetEntity = ((ClientWorldAccessor) client.world).getEntityManager().getLookup().get(uuid);
 
             final boolean cache = now - info.lastUpdate() > config.cacheServer;
-            final boolean raycast = !config.alwaysRenderBox && !performRaycastPos(client, targetEntity, delta);
+            final boolean falseRaycast = !performRaycastPos(client, targetEntity, delta);
+            final boolean alwaysRender = config.alwaysRenderBox;
             final boolean alive = info.health() <= 0;
 
-            if (cache || alive || raycast) {
+            if (cache || alive || (falseRaycast && !alwaysRender)) {
                 activeChampions.remove(entry.getKey());
                 continue;
             }
@@ -126,9 +131,9 @@ public abstract class ChampionHudRender implements HudRenderCallback {
         ));
 
         if (blockHit.getType() != HitResult.Type.MISS) {
-            double blockDistSq = blockHit.getPos().squaredDistanceTo(startPos);
-            double entityDistSq = endPos.squaredDistanceTo(startPos);
-            return blockDistSq != entityDistSq;
+            final double blockDistSq = blockHit.getPos().squaredDistanceTo(startPos);
+            final double entityDistSq = endPos.squaredDistanceTo(startPos);
+            return blockDistSq >= entityDistSq;
         }
         return true;
     }
@@ -152,7 +157,7 @@ public abstract class ChampionHudRender implements HudRenderCallback {
                 camera
         ));
 
-        double sq = blockHit.getType() != HitResult.Type.MISS
+        final double sq = blockHit.getType() != HitResult.Type.MISS
                 ? blockHit.getPos().squaredDistanceTo(pos)
                 : 80.0 * 80.0;
 

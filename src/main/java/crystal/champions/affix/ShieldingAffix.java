@@ -22,10 +22,10 @@ public class ShieldingAffix extends Affix {
     public void onTick(LivingEntity entity) {
         if (entity.getWorld().isClient) return;
 
-        IChampions champion = (IChampions) entity;
-        long time = entity.getWorld().getTime();
+        final long time = entity.getWorld().getTime();
+        final boolean shieldWork = (time % config.shieldAllTime) < config.shieldWork;
 
-        boolean shieldWork = (time % config.shieldAllTime) < config.shieldWork;
+        IChampions champion = (IChampions) entity;
 
         if (champion.champions$isShielding() != shieldWork) {
             champion.champions$setShielding(shieldWork);

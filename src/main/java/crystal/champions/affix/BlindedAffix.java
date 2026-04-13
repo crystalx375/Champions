@@ -18,7 +18,6 @@ public class BlindedAffix extends Affix {
 
     @Override
     public void onHurt(LivingEntity champion, LivingEntity target) {
-
         if (rnd.nextFloat() < config.blindChance) {
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, config.blindDuration, 0, false, true, true));
         }

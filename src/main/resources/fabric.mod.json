@@ -17,7 +17,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"crystal.champions.Champions",
+          "crystal.champions.Champions",
           "crystal.champions.data.ChampionsLootTableRegister"
 		],
         "fabric-datagen": [
@@ -25,7 +25,10 @@
         ],
 		"client": [
           "crystal.champions.client.ChampionsClient"
-		]
+		],
+        "modmenu": [
+          "crystal.champions.client.config.ChampionsModMenu"
+        ]
 	},
 	"mixins": [
 		"champions.mixins.json",
@@ -40,5 +43,9 @@
 		"minecraft": ">=1.21 <=1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
-	}
+	},
+    "suggests": {
+      "modmenu": ">=11.0.3",
+      "cloth-config": ">=15.0.140"
+    }
 }

@@ -23,10 +23,12 @@ public class StunStatusEffect extends StatusEffect {
 
         if (entity instanceof PlayerEntity player) {
             UUID id = player.getUuid();
+
             frozenYaw.putIfAbsent(id, player.getYaw());
             frozenPitch.putIfAbsent(id, player.getPitch());
-            float baseYaw = frozenYaw.get(id);
-            float basePitch = frozenPitch.get(id);
+            final float baseYaw = frozenYaw.get(id);
+            final float basePitch = frozenPitch.get(id);
+
             player.setYaw(baseYaw + (float)((Math.random() - 0.5) * 0.1));
             player.setPitch(basePitch + (float)((Math.random() - 0.5) * 0.1));
 

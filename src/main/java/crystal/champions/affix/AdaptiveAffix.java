@@ -25,15 +25,15 @@ public class AdaptiveAffix extends Affix {
         Optional<RegistryKey<DamageType>> key = source.getTypeRegistryEntry().getKey();
         if (key.isEmpty()) return amount;
         if (source.getSource() == champion&& source.getAttacker() == champion) return amount;
-        String currentType = source.getTypeRegistryEntry().getKey().get().getValue().toString();
+        final String currentType = source.getTypeRegistryEntry().getKey().get().getValue().toString();
 
-        String lastType = champion.champions$getAdaptationType();
-        int count = champion.champions$getAdaptation();
+        final String lastType = champion.champions$getAdaptationType();
+        final int count = champion.champions$getAdaptation();
         if (lastType.equals(currentType)) {
             champion.champions$setAdaptation(count + 1);
-            float reduction = amount * 0.15f * count;
-            float newAmount = amount - reduction;
-            float minDamage = amount * 0.2f;
+            final float reduction = amount * 0.15f * count;
+            final float newAmount = amount - reduction;
+            final float minDamage = amount * 0.2f;
             return Math.max(newAmount, minDamage);
         } else {
             champion.champions$setAdaptationType(currentType);

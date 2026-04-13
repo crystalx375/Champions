@@ -7,7 +7,6 @@ public class ChampionsColorServer {
         /* This utility class should not be instantiated */
     }
 
-    static ChampionsConfigClient cfg = ChampionsConfigClient.get();
     private static int parseHex(String hex) {
         try {
             return Integer.decode(hex);
@@ -17,6 +16,8 @@ public class ChampionsColorServer {
     }
 
     public static int getColor(int tier) {
+        ChampionsConfigClient cfg = ChampionsConfigClient.get();
+
         try {
             return switch (tier) {
                 case 1 -> parseHex(cfg.hexTier1);
