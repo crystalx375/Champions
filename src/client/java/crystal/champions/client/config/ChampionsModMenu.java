@@ -195,13 +195,13 @@ public class ChampionsModMenu implements ModMenuApi {
 
 
         tiersWeight.add(entryBuilder.startIntField(Text.translatable("champions.tier0_weight"), config.w0)
-                .setDefaultValue(9320).setMin(0)
+                .setDefaultValue(9460).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w0, val))
                 .setTooltip(Text.translatable("champions.tooltip.tier0_weight"))
                 .build());
 
         tiersWeight.add(entryBuilder.startIntField(Text.translatable("champions.tier1_weight"), config.w1)
-                .setDefaultValue(490).setMin(0)
+                .setDefaultValue(400).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w1, val))
                 .setTooltip(Text.translatable("champions.tooltip.tier1_weight"))
                 .build());

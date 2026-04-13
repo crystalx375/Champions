@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ChampionsConfigServer {
-    private static final int VERSION = 3;
+    private static final int VERSION = 5;
     private static ChampionsConfigServer instance;
 
     public final int a1;
@@ -51,7 +51,7 @@ public class ChampionsConfigServer {
         this.a5 = config.getOrDefault("tier5_affixes_count", 8);
 
         this.w0 = config.getOrDefault("tier0_weight", 9320);
-        this.w1 = config.getOrDefault("tier1_weight", 490);
+        this.w1 = config.getOrDefault("tier1_weight", 400);
         this.w2 = config.getOrDefault("tier2_weight", 150);
         this.w3 = config.getOrDefault("tier3_weight", 32);
         this.w4 = config.getOrDefault("tier4_weight", 6);
@@ -77,11 +77,11 @@ public class ChampionsConfigServer {
                 # Champions Server
                 
                 # Tier 0 (not champion)
-                tier0_weight = 9320
+                tier0_weight = 9460
                 
                 # Tier 1
                 tier1_affixes_count = 1
-                tier1_weight = 490
+                tier1_weight = 400
                 tier1_growth_health = 1.5
                 tier1_growth_strength = 1.5
 

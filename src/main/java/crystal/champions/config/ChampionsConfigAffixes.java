@@ -96,8 +96,8 @@ public class ChampionsConfigAffixes {
 
         reflectionDamage = config.getOrDefault("reflection_damage", 2);
 
-        shieldAllTime = config.getOrDefault("shield_all_time", 200);
-        shieldWork = config.getOrDefault("shield_working_time", 100);
+        shieldAllTime = config.getOrDefault("shield_all_time", 300);
+        shieldWork = config.getOrDefault("shield_working_time", 60);
 
         blindChance = (float) config.getOrDefault("blind_chance", 0.2);
         blindDuration = config.getOrDefault("blind_duration", 80);
@@ -205,9 +205,9 @@ public class ChampionsConfigAffixes {
                 
                 # Shield
                 # Cycle time of the shield (ticks)
-                shield_all_time = 200
+                shield_all_time = 300
                 # How long the shield stays active (ticks)
-                shield_working_time = 100
+                shield_working_time = 60
                 
                 # Blinded
                 # Chance to blind (1.0 - 0)
