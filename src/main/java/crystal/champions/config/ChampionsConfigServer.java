@@ -1,13 +1,11 @@
 package crystal.champions.config;
 
 import crystal.champions.Champions;
+import crystal.champions.util.FilesWriter;
 import crystal.champions.util.SimpleConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ChampionsConfigServer {
@@ -117,34 +115,12 @@ public class ChampionsConfigServer {
     public static void save(Map<String, Object> changes) {
         Path path = FabricLoader.getInstance().getConfigDir()
                 .resolve("Champions").resolve("champions_common.properties");
-
-        try {
-            if (!Files.exists(path)) return;
-
-            List<String> l = Files.readAllLines(path);
-            List<String> newLines = new ArrayList<>();
-
-            for (String line : l) {
-                String trimmed = line.trim();
-                if (!trimmed.startsWith("#") && trimmed.contains("=")) {
-                    String key = trimmed.split("=")[0].trim();
-                    if (changes.containsKey(key)) {
-                        newLines.add(key + " = " + changes.get(key));
-                        continue;
-                    }
-                }
-                newLines.add(line);
-            }
-            Files.write(path, newLines);
-            Champions.LOGGER.info("Saved champions_common");
-        } catch (Exception e) {
-            Champions.LOGGER.error("Failed to save champions_common!", e);
-        }
+        FilesWriter.writer(path, changes);
     }
 
     public static void reload() {
         instance = new ChampionsConfigServer();
-        Champions.LOGGER.info("Config reloaded!");
+        Champions.LOGGER.info("champions_common reloaded!");
     }
 
     public static ChampionsConfigServer get() {

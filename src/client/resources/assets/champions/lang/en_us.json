@@ -26,6 +26,7 @@
   "champions.hud.bar_render": "Bar render",
 
   "champions.hud.tiers": "Tiers",
+  "champions.hud.tiers_w": "Weight",
   "champions.hud.tiers_gh": "Health multiplier",
   "champions.hud.tiers_gs": "Strength",
   "champions.hud.tiers_a": "Affixes count",
