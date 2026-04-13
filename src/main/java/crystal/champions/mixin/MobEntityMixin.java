@@ -44,7 +44,7 @@ public abstract class MobEntityMixin implements IChampions {
         if (rank.tier() > 0) {
             champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);
-            prepareAffixes(rank);
+            champions$setAffixesString(prepareAffixes(rank));
         }
     }
 }

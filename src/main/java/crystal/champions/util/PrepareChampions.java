@@ -30,8 +30,8 @@ public class PrepareChampions {
         List<String> pool = new ArrayList<>(AffixRegistry.ALL_AFFIXES.keySet());
         Collections.shuffle(pool);
 
-        final int count = Math.min(rank.affixes(), pool.size());
-        final List<String> selected = pool.subList(0, count);
+        int count = Math.min(rank.affixes(), pool.size());
+        List<String> selected = pool.subList(0, count);
 
         return String.join(",", selected);
     }
