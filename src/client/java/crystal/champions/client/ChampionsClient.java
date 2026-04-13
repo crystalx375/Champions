@@ -21,7 +21,7 @@ public class ChampionsClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(Champions.CHAMPIONS_SPELL,
                 spriteProvider -> (type, world, x, y, z, vx, vy, vz) -> {
-                    int color = (int) vx;
+                    final int color = (int) vx;
                     return new ChampionsParticle(world, x, y, z, 0, 0.05, 0, spriteProvider, color);
                 }
         );

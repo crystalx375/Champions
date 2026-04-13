@@ -53,8 +53,8 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
         for (ServerPlayerEntity player : nearby) {
             if (!ServerPlayNetworking.canSend(player, Payload.ChampionUpdate.SERVER_UPDATE_ID)) return;
 
-            UUID uuid = player.getUuid();
-            double distance = player.squaredDistanceTo(this);
+            final UUID uuid = player.getUuid();
+            final double distance = player.squaredDistanceTo(this);
 
             if (!BOSSES) {
                 if (distance <= 1600) {

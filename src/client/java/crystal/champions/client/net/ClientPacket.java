@@ -20,10 +20,10 @@ public class ClientPacket {
      */
     public static void registerPackets() {
 
-            ClientPlayNetworking.registerGlobalReceiver(Payload.ChampionRemove.REMOVE_ID, (buf, context) -> {
-                context.client().execute(() -> activeChampions.remove(buf.uuid()));
-                context.client().execute(() -> activeChampionsCl.remove(buf.uuid()));
-            });
+        ClientPlayNetworking.registerGlobalReceiver(Payload.ChampionRemove.REMOVE_ID, (buf, context) -> {
+            context.client().execute(() -> activeChampions.remove(buf.uuid()));
+            context.client().execute(() -> activeChampionsCl.remove(buf.uuid()));
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, (buf, context) ->
                 context.client().execute(() -> {

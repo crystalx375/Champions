@@ -32,7 +32,7 @@ public class ReflectionMixin {
             if (!(source.getAttacker() instanceof LivingEntity attacker) || source.getAttacker() == null) return;
 
             attacker.damage(attacker.getWorld().getDamageSources().thorns(source.getSource()), config.reflectionDamage);
-            double random = rnd.nextDouble(-0.15, 0.15);
+            final double random = rnd.nextDouble(-0.15, 0.15);
             final double x = attacker.getVelocity().x + random;
             final double z = attacker.getVelocity().z + random;
             attacker.takeKnockback(0.4, x, z);

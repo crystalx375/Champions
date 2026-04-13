@@ -159,7 +159,7 @@ public class SimpleConfig {
 
         if (request.file.exists() && isOutdated() ) {
             LOGGER.warn("{} is outdated, backing up and regenerating...", identifier);
-            deleteOld();
+            saveAndDelete();
         }
 
         if(!request.file.exists()) {
@@ -266,7 +266,7 @@ public class SimpleConfig {
      * @author Crystal
      * Recreate File and create outdated file
      */
-    private void deleteOld() {
+    public void saveAndDelete() {
         Path source = request.file.toPath();
         Path backup = source.resolveSibling(source.getFileName() + ".old");
         try {
@@ -282,7 +282,7 @@ public class SimpleConfig {
      * Checking version
      * @return if true is outdate
      */
-    private boolean isOutdated() {
+    public boolean isOutdated() {
         try (Scanner reader = new Scanner(request.file)) {
             while (reader.hasNextLine()) {
                 String s = reader.nextLine();

@@ -2,11 +2,17 @@ package crystal.champions.config;
 
 import crystal.champions.Champions;
 import crystal.champions.util.SimpleConfig;
+import net.fabricmc.loader.api.FabricLoader;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ChampionsConfigAffixes {
     private static final int VERSION = 1;
     private static ChampionsConfigAffixes instance;
-    static boolean firstTick = true;
 
     public final int cooldownBeforeBulletArtic;
     public final float dampeningAmount;
@@ -90,8 +96,8 @@ public class ChampionsConfigAffixes {
 
         reflectionDamage = config.getOrDefault("reflection_damage", 2);
 
-        shieldAllTime = config.getOrDefault("shield_all_time", 200);
-        shieldWork = config.getOrDefault("shield_working_time", 100);
+        shieldAllTime = config.getOrDefault("shield_all_time", 300);
+        shieldWork = config.getOrDefault("shield_working_time", 60);
 
         blindChance = (float) config.getOrDefault("blind_chance", 0.2);
         blindDuration = config.getOrDefault("blind_duration", 80);
@@ -199,9 +205,9 @@ public class ChampionsConfigAffixes {
                 
                 # Shield
                 # Cycle time of the shield (ticks)
-                shield_all_time = 200
+                shield_all_time = 300
                 # How long the shield stays active (ticks)
-                shield_working_time = 100
+                shield_working_time = 60
                 
                 # Blinded
                 # Chance to blind (1.0 - 0)
@@ -217,11 +223,40 @@ public class ChampionsConfigAffixes {
                 """;
     }
 
-    public static ChampionsConfigAffixes get() {
-        if (firstTick) {
-            Champions.LOGGER.info("Registering champions_affixes");
-            firstTick = false;
+    public static void save(Map<String, Object> changes) {
+        Path path = FabricLoader.getInstance().getConfigDir()
+                .resolve("Champions").resolve("champions_affixes.properties");
+
+        try {
+            if (!Files.exists(path)) return;
+
+            List<String> l = Files.readAllLines(path);
+            List<String> newLines = new ArrayList<>();
+
+            for (String line : l) {
+                String trimmed = line.trim();
+                if (!trimmed.startsWith("#") && trimmed.contains("=")) {
+                    String key = trimmed.split("=")[0].trim();
+                    if (changes.containsKey(key)) {
+                        newLines.add(key + " = " + changes.get(key));
+                        continue;
+                    }
+                }
+                newLines.add(line);
+            }
+            Files.write(path, newLines);
+            Champions.LOGGER.info("Saved champions_affixes");
+        } catch (Exception e) {
+            Champions.LOGGER.error("Failed to save champions_affixes!", e);
         }
+    }
+
+    public static void reload() {
+        instance = new ChampionsConfigAffixes();
+        Champions.LOGGER.info("Config reloaded!");
+    }
+
+    public static ChampionsConfigAffixes get() {
         if (instance == null) {
             instance = new ChampionsConfigAffixes();
         }

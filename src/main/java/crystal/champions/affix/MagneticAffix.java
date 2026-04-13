@@ -23,10 +23,10 @@ public class MagneticAffix extends Affix {
         LivingEntity target = mob.getTarget();
         if (target != null) {
             Vec3d pullDir = entity.getPos().subtract(target.getPos()).normalize();
-            double i = 0.01 * config.strength;
-            float pX = (float) (pullDir.x * i + target.getVelocity().x * 0.5);
-            float pY = (float) (pullDir.y * i + target.getVelocity().y * 0.6);
-            float pZ = (float) (pullDir.z * i + target.getVelocity().z * 0.5);
+            final double i = 0.01 * config.strength;
+            final float pX = (float) (pullDir.x * i + target.getVelocity().x * 0.5);
+            final float pY = (float) (pullDir.y * i + target.getVelocity().y * 0.6);
+            final float pZ = (float) (pullDir.z * i + target.getVelocity().z * 0.5);
             target.setVelocity(pX, pY, pZ);
 
             target.velocityModified = true;

@@ -23,7 +23,7 @@ public class ChampionsLootTableRegister implements ModInitializer {
             if (source.isBuiltin() && key.getValue().getPath().startsWith("entities/")) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1.0f));
-                for (int tier = 1; tier < 5; tier++) {
+                for (int tier = 1; tier < 6; tier++) {
                     RegistryKey<LootTable> tierKey = RegistryKey.of(RegistryKeys.LOOT_TABLE,
                             Identifier.of("champions", "champions/tier_" + tier));
                     poolBuilder.with(LootTableEntry.builder(tierKey)
