@@ -120,7 +120,7 @@ public class ChampionsConfigServer {
 
     public static void reload() {
         instance = new ChampionsConfigServer();
-        ChampionRank.reload();
+        ChampionRank.get();
         Champions.LOGGER.info("champions_common reloaded!");
     }
 

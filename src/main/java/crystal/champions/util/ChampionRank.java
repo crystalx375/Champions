@@ -11,8 +11,8 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
     public static List<ChampionRank> RANKS = new ArrayList<>();
     private static int TOTAL_WEIGHT = 0;
 
-    public static void reload() {
-        var cfg = ChampionsConfigServer.get(); // Твой класс конфига
+    public static void get() {
+        var cfg = ChampionsConfigServer.get();
         TOTAL_WEIGHT = 0;
         RANKS = List.of(
                 new ChampionRank(0, 0, cfg.w0, 1.0f, 1.0f),
