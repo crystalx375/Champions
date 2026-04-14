@@ -1,7 +1,6 @@
 package crystal.champions.config;
 
 import crystal.champions.Champions;
-import crystal.champions.util.FilesWriter;
 import crystal.champions.util.SimpleConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -100,7 +99,7 @@ public class ChampionsConfigClient {
     public static void save(Map<String, Object> changes) {
         Path path = FabricLoader.getInstance().getConfigDir()
                 .resolve("Champions").resolve("champions_client.properties");
-        FilesWriter.writer(path, changes);
+        SimpleConfig.writer(path, changes);
     }
 
     public static void reload() {

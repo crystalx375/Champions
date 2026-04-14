@@ -1,7 +1,7 @@
 package crystal.champions.config;
 
 import crystal.champions.Champions;
-import crystal.champions.util.FilesWriter;
+import crystal.champions.affix.AffixRegistry;
 import crystal.champions.util.SimpleConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;
@@ -224,11 +224,12 @@ public class ChampionsConfigAffixes {
     public static void save(Map<String, Object> changes) {
         Path path = FabricLoader.getInstance().getConfigDir()
                 .resolve("Champions").resolve("champions_affixes.properties");
-        FilesWriter.writer(path, changes);
+        SimpleConfig.writer(path, changes);
     }
 
     public static void reload() {
         instance = new ChampionsConfigAffixes();
+        AffixRegistry.affixesRegister();
         Champions.LOGGER.info("champions_affixes reloaded!");
     }
 

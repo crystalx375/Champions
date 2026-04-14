@@ -26,7 +26,7 @@ public abstract class WitherMixin extends LivingEntity implements IChampions {
     private void applyChampionsLogic(EntityType entityType, World world, CallbackInfo ci) {
 
         MobEntity mob = (MobEntity) (Object) this;
-        ChampionRank rank = ChampionRank.getBossRank(mob.getRandom());
+        ChampionRank rank = ChampionRank.getRandomRank(mob.getRandom());
         if (rank.tier() > 0) {
             champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);
