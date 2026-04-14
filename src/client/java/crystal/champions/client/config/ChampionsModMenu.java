@@ -480,10 +480,11 @@ public class ChampionsModMenu implements ModMenuApi {
 
         builder.setSavingRunnable(() -> {
             ChampionsConfigClient.save(changes);
-            ChampionsConfigClient.reload();
             ChampionsConfigServer.save(changesServer);
-            ChampionsConfigServer.reload();
             ChampionsConfigAffixes.save(changesAffix);
+
+            ChampionsConfigClient.reload();
+            ChampionsConfigServer.reload();
             ChampionsConfigAffixes.reload();
         });
         return builder.build();
