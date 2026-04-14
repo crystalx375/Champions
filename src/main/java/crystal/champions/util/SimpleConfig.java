@@ -22,6 +22,7 @@
 package crystal.champions.util;
 
 import com.google.gson.JsonSyntaxException;
+import crystal.champions.Champions;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,8 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class SimpleConfig {
 
@@ -296,5 +296,36 @@ public class SimpleConfig {
             return true;
         }
         return true;
+    }
+
+    /**
+     * @author Crystal
+     * Created for dynamical config
+     * @param path path of file
+     * @param changes changes map with key and val
+     */
+    public static void writer(Path path, Map<String, Object> changes) {
+        try {
+            if (!Files.exists(path)) return;
+
+            List<String> l = Files.readAllLines(path);
+            List<String> newLines = new ArrayList<>();
+
+            for (String line : l) {
+                String trimmed = line.trim();
+                if (!trimmed.startsWith("#") && trimmed.contains("=")) {
+                    String key = trimmed.split("=")[0].trim();
+                    if (changes.containsKey(key)) {
+                        newLines.add(key + " = " + changes.get(key));
+                        continue;
+                    }
+                }
+                newLines.add(line);
+            }
+            Files.write(path, newLines);
+            Champions.LOGGER.info("Saved config");
+        } catch (IOException e) {
+            Champions.LOGGER.error("Failed to save config - path: {}", path);
+        }
     }
 }

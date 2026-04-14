@@ -19,6 +19,7 @@
 
   "champions.category.client": "Client",
   "champions.category.server": "Server",
+  "champions.category.affixes": "Affixes",
 
   "champions.hud.colors": "Colors",
   "champions.hud.y_offset": "Y Offsets",
@@ -28,8 +29,11 @@
   "champions.hud.tiers": "Tiers",
   "champions.hud.tiers_w": "Weight",
   "champions.hud.tiers_gh": "Health multiplier",
-  "champions.hud.tiers_gs": "Strength",
+  "champions.hud.tiers_gs": "Strength multiplier",
   "champions.hud.tiers_a": "Affixes count",
+
+  "champions.hud.registry": "Registry",
+
 
   "champions.hex_tier_1": "Tier 1",
   "champions.hex_tier_2": "Tier 2",
@@ -115,5 +119,21 @@
   "champions.tooltip.tier2_affixes_count": "Affixes count for tier 2",
   "champions.tooltip.tier3_affixes_count": "Affixes count for tier 3",
   "champions.tooltip.tier4_affixes_count": "Affixes count for tier 4",
-  "champions.tooltip.tier5_affixes_count": "Affixes count for tier 5"
+  "champions.tooltip.tier5_affixes_count": "Affixes count for tier 5",
+
+  "champions.tooltip.hasty_affix": "Hasty affix",
+  "champions.tooltip.arctic_affix": "Arctic affix",
+  "champions.tooltip.affix.molten": "Molten affix",
+  "champions.tooltip.affix.desecrating": "Desecrating affix",
+  "champions.tooltip.affix.plagued": "Plagued affix",
+  "champions.tooltip.affix.infected": "Infected affix",
+  "champions.tooltip.affix.adaptive": "Adaptive affix",
+  "champions.tooltip.affix.knocking": "Knocking affix",
+  "champions.tooltip.affix.shielding": "Shielding affix",
+  "champions.tooltip.affix.reflection": "Reflection affix",
+  "champions.tooltip.affix.magnetic": "Magnetic affix",
+  "champions.tooltip.affix.dampening": "Dampening affix",
+  "champions.tooltip.affix.lively": "Lively affix",
+  "champions.tooltip.affix.blinded": "Blinded affix",
+  "champions.tooltip.affix.paralyzing": "Paralyzing affix"
 }

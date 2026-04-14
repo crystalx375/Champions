@@ -1,7 +1,7 @@
 package crystal.champions.config;
 
 import crystal.champions.Champions;
-import crystal.champions.util.FilesWriter;
+import crystal.champions.util.ChampionRank;
 import crystal.champions.util.SimpleConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -115,11 +115,12 @@ public class ChampionsConfigServer {
     public static void save(Map<String, Object> changes) {
         Path path = FabricLoader.getInstance().getConfigDir()
                 .resolve("Champions").resolve("champions_common.properties");
-        FilesWriter.writer(path, changes);
+        SimpleConfig.writer(path, changes);
     }
 
     public static void reload() {
         instance = new ChampionsConfigServer();
+        ChampionRank.reload();
         Champions.LOGGER.info("champions_common reloaded!");
     }
 

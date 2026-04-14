@@ -23,7 +23,7 @@ public class ChampionsColor {
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    private static int parseHex(String hex) {
+    public static int parseHex(String hex) {
         try {
             return Integer.decode(hex);
         } catch (NumberFormatException e) {
