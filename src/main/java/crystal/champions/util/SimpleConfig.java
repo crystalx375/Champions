@@ -121,15 +121,23 @@ public class SimpleConfig {
 
     private void createConfig() throws IOException {
         // try creating missing files
-        Files.createFile(request.file.toPath());
+        Path parent = request.file.toPath().getParent();
+        if (parent != null && !Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
+        if (!Files.exists(request.file.toPath())) {
+            Files.createFile(request.file.toPath());
+        }
 
         // write default config data
-        PrintWriter writer = new PrintWriter(request.file, StandardCharsets.UTF_8);
-        writer.println("# <--- Dont change version below --->");
-        writer.println("version = " + request.version);
-        writer.write( request.getConfig() );
-        writer.close();
-
+        try (PrintWriter writer = new PrintWriter(request.file, StandardCharsets.UTF_8)) {
+            writer.println("# <--- Dont change version below --->");
+            writer.println("version = " + request.version);
+            writer.write( request.getConfig() );
+        } catch (IOException e) {
+            LOGGER.error("{} failed to generate!", request.file, e);
+            broken = true;
+        }
     }
 
     private void loadConfig() throws IOException {
@@ -138,7 +146,7 @@ public class SimpleConfig {
                 parseConfigEntry( reader.nextLine(), line );
             }
         } catch (FileNotFoundException e) {
-            LOGGER.error("Failed to load config");
+            LOGGER.error("{} Failed to load config", request.file, e);
         }
     }
 

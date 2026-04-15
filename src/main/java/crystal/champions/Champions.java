@@ -3,6 +3,7 @@ package crystal.champions;
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.config.ChampionsConfigServer;
 import crystal.champions.effects.CustomStatusEffects;
+import crystal.champions.util.ChampionRank;
 import crystal.champions.util.net.Payload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -25,6 +26,7 @@ public class Champions implements ModInitializer {
 		LOGGER.info("Loading champions...");
         ChampionsConfigServer.get();
         ChampionsConfigAffixes.get();
+        ChampionRank.get();
 
         Payload.register();
         affixesRegister();
