@@ -20,23 +20,21 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class ChampionsLootTable extends SimpleFabricLootTableProvider {
-    private final RegistryWrapper.WrapperLookup registries;
 
     public ChampionsLootTable(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
         super(output, registryLookup, LootContextTypes.ENTITY);
-        this.registries = registryLookup.join();
     }
 
     @Override
     public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter) {
         generateTier(exporter, 1, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
+                .apply(EnchantRandomlyLootFunction.create()));
         generateTier(exporter, 2, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
+                .apply(EnchantRandomlyLootFunction.create()));
         generateTier(exporter, 3, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
+                .apply(EnchantRandomlyLootFunction.create()));
         generateTier(exporter, 4, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
+                .apply(EnchantRandomlyLootFunction.create()));
 
         generateTier5(exporter);
     }
@@ -79,7 +77,7 @@ public class ChampionsLootTable extends SimpleFabricLootTableProvider {
                 .pool(LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(4))
                         .with(ItemEntry.builder(Items.BOOK)
-                                .apply(EnchantRandomlyLootFunction.builder((this.registries))))
+                                .apply(EnchantRandomlyLootFunction.create()))
                 )
         );
     }

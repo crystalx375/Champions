@@ -34,7 +34,7 @@ public class AffixRegistry {
             LivelyAffix::new,
             BlindedAffix::new,
             ParalyzingAffix::new
-            );
+    );
 
     public static void affixesRegister() {
         ALL_AFFIXES.clear();

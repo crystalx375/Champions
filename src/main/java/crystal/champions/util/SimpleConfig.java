@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 magistermaks and ?crystalx0375?
+ * Copyright (c) 2021 magistermaks
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * Edited some code - crystalx0375
  */
 package crystal.champions.util;
 
@@ -140,7 +142,7 @@ public class SimpleConfig {
         }
     }
 
-    private void loadConfig() throws IOException {
+    private void loadConfig() {
         try (Scanner reader = new Scanner(request.file)){
             for( int line = 1; reader.hasNextLine(); line ++ ) {
                 parseConfigEntry( reader.nextLine(), line );
@@ -167,7 +169,7 @@ public class SimpleConfig {
 
         if (request.file.exists() && isOutdated() ) {
             LOGGER.warn("{} is outdated, backing up and regenerating...", identifier);
-            saveAndDelete();
+            save();
         }
 
         if(!request.file.exists()) {
@@ -202,7 +204,7 @@ public class SimpleConfig {
      * @see     SimpleConfig#getOrDefault
      */
     public String get(String key) {
-        return config.get( key );
+        return config.get(key);
     }
 
     /**
@@ -251,6 +253,20 @@ public class SimpleConfig {
      *
      * @return  value corresponding to the given key, or the default value
      */
+    public float getOrDefault(String key, float def) {
+        try {
+            return Float.parseFloat(get(key));
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    /**
+     * Returns double value from config corresponding to the given
+     * key, or the default string if the key is missing or invalid.
+     *
+     * @return  value corresponding to the given key, or the default value
+     */
     public double getOrDefault(String key, double def) {
         try {
             return Double.parseDouble(get(key));
@@ -260,35 +276,20 @@ public class SimpleConfig {
     }
 
     /**
-     * If any error occurred during loading or reading from the config
-     * a 'broken' flag is set, indicating that the config's state
-     * is undefined and should be discarded using `delete()`
-     *
-     * @return the 'broken' flag of the configuration
-     */
-    public boolean isBroken() {
-        return broken;
-    }
-
-    /**
      * @author Crystal
-     * Recreate File and create outdated file
+     * Recreate file and create .old backup
      */
-    public void saveAndDelete() {
+    public void save() {
         Path source = request.file.toPath();
         Path backup = source.resolveSibling(source.getFileName() + ".old");
-        try {
-            Files.deleteIfExists(backup);
-            Files.move(source, backup, StandardCopyOption.REPLACE_EXISTING);
-
-        } catch (IOException e) {
-            LOGGER.error("Failed to create backup for {}", source, e);
-        }
+        delete(source);
+        backup(source, backup);
     }
+
     /**
      * @author Crystal
      * Checking version
-     * @return if true is outdate
+     * @return when is outdate
      */
     public boolean isOutdated() {
         try (Scanner reader = new Scanner(request.file)) {
@@ -309,6 +310,7 @@ public class SimpleConfig {
     /**
      * @author Crystal
      * Created for dynamical config
+     * E.g. Mod Menu + Cloth Config
      * @param path path of file
      * @param changes changes map with key and val
      */
@@ -334,6 +336,51 @@ public class SimpleConfig {
             Champions.LOGGER.info("Saved config");
         } catch (IOException e) {
             Champions.LOGGER.error("Failed to save config - path: {}", path);
+        }
+    }
+
+    /**
+     * If any error occurred during loading or reading from the config
+     * a 'broken' flag is set, indicating that the config's state
+     * is undefined and should be discarded using `delete()`
+     *
+     * @return the 'broken' flag of the configuration
+     */
+    public boolean isBroken() {
+        return broken;
+    }
+
+    /**
+     * @author Crystal
+     * If flag broken is true -> trying to delete file
+     * @param path File path
+     */
+    public void deleteBrokenFile(Path path) {
+        if (isBroken()) {
+            try {
+                Files.delete(path);
+                LOGGER.info("Deleted broken file {}", path);
+                broken = false;
+            } catch (IOException e) {
+                LOGGER.error("Failed to delete broken file {}", path, e);
+                broken = true;
+            }
+        }
+    }
+
+    private void delete(Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            LOGGER.error("Failed to delete file");
+        }
+    }
+    private void backup(Path source, Path backup) {
+        try {
+            Files.move(source, backup, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            LOGGER.error("Failed to create backup for {}", source, e);
+            broken = true;
         }
     }
 }
