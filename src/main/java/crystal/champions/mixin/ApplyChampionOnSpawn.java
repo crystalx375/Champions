@@ -16,10 +16,9 @@ import static crystal.champions.util.PrepareChampions.*;
 
 @Mixin(MobEntity.class)
 public class ApplyChampionOnSpawn {
-    @Inject(method = "initialize", at = @At("HEAD"))
+    @Inject(method = "initialize", at = @At("TAIL"))
     private void initChampionsOrPass(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         final MobEntity mobEntity = (MobEntity) (Object) this;
-
         if (mobEntity instanceof IChampions i && canBeChampion(mobEntity)) {
             final ChampionRank rank = ChampionRank.getRandomRank(mobEntity.getRandom());
             if (rank.tier() > 0) {
