@@ -3,8 +3,14 @@ package crystal.champions.util;
 import crystal.champions.affix.AffixRegistry;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.mob.*;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.PolarBearEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.registry.entry.RegistryEntry;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,5 +47,19 @@ public class PrepareChampions {
         if (instance != null) {
             instance.setBaseValue(instance.getBaseValue() * m);
         }
+    }
+
+    @Unique
+    public static boolean canBeChampion(MobEntity mob) {
+        final boolean isAgg = mob instanceof HostileEntity || mob instanceof Angerable
+                || mob instanceof CaveSpiderEntity || mob instanceof GhastEntity
+                || mob instanceof PhantomEntity || mob instanceof ShulkerEntity
+                || mob instanceof SilverfishEntity || mob instanceof SlimeEntity;
+
+        final boolean isException = mob instanceof EnderDragonEntity || mob instanceof WitherEntity
+                || mob instanceof IronGolemEntity || mob instanceof PolarBearEntity
+                || mob instanceof WolfEntity;
+
+        return isAgg && !isException;
     }
 }

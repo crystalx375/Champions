@@ -82,8 +82,8 @@ public class ChampionsRender {
     }
 
     private static void renderAffixes(DrawContext context, MinecraftClient client, int centerX, int y, String raw) {
-        String[] split = raw.split("•|·|\\s+|,");
-        MutableText finalText = Text.empty();
+        final String[] split = raw.split("•|·|\\s+|,");
+        final MutableText finalText = Text.empty();
 
         for (String s : split) {
             String t = s.trim();

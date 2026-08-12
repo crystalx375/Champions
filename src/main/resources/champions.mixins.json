@@ -3,10 +3,11 @@
   "package": "crystal.champions.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ApplyChampionOnSpawn",
+    "ApplyChampionOnTrialSpawn",
     "CreeperEntityMixin",
     "EnderDragonMixin",
     "EntityDataMixin",
-    "MobEntityMixin",
     "ServerUpdatePackets",
     "ShulkerBulletMixin",
     "SlimeEntityMixin",

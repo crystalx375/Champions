@@ -32,7 +32,7 @@ public class ChampionsColor {
     }
 
     public static int getColor(int tier) {
-        ChampionsConfigClient config = ChampionsConfigClient.get();
+        final ChampionsConfigClient config = ChampionsConfigClient.get();
 
         try {
             return switch (tier) {

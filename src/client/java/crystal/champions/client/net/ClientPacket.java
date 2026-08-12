@@ -42,13 +42,13 @@ public class ClientPacket {
         ClientPlayNetworking.registerGlobalReceiver(Payload.ChampionUpdate.SERVER_UPDATE_ID, (buf, context) ->
                 context.client().execute(() -> {
                 ChampionDisplayInfo info = new ChampionDisplayInfo(
-                        buf.name(),
-                buf.tier(),
-                buf.affixes(),
-                buf.health(),
-                buf.maxHealth(),
-                        System.currentTimeMillis(),
-                        System.currentTimeMillis()
+                    buf.name(),
+                    buf.tier(),
+                    buf.affixes(),
+                    buf.health(),
+                    buf.maxHealth(),
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis()
                 );
                 context.client().execute(() -> activeChampions.put(buf.uuid(), info));
         }));

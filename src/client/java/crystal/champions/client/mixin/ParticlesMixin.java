@@ -18,8 +18,8 @@ import static crystal.champions.ChampionsColorServer.getColor;
 public class ParticlesMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        UUID uuid = entity.getUuid();
+        final LivingEntity entity = (LivingEntity) (Object) this;
+        final UUID uuid = entity.getUuid();
 
         ChampionDisplayInfo info = ClientPacket.activeChampionsCl.get(uuid);
 
@@ -30,7 +30,7 @@ public class ParticlesMixin {
 
     @Unique
     private void spawnChampionParticles(LivingEntity entity, int tier) {
-        int color = getColor(tier);
+       final int color = getColor(tier);
 
         entity.getWorld().addParticle(
                 Champions.CHAMPIONS_SPELL,

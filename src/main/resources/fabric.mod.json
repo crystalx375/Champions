@@ -9,8 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/project/champions-fabric",
-		"sources": "https://github.com/crystalx375/Champions",
-        "issues": "https://github.com/crystalx375/Champions/issues"
+		"sources": "https://github.com/crystalx0375/Champions",
+        "issues": "https://github.com/crystalx0375/Champions/issues"
 	},
 	"license": "Gplv3",
 	"icon": "assets/champions/icon.png",

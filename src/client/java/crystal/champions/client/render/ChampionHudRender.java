@@ -82,16 +82,17 @@ public abstract class ChampionHudRender implements HudRenderCallback {
      * Box render
      */
     private ChampionData findBestChampion(MinecraftClient client, float delta) {
-        ChampionsConfigClient config = ChampionsConfigClient.get();
+        final ChampionsConfigClient config = ChampionsConfigClient.get();
 
         if (config.onlyForView || client.world == null || client.player == null) return null;
         ChampionData best = null;
         final long now = System.currentTimeMillis();
 
         for (Map.Entry<UUID, ChampionDisplayInfo> entry : activeChampions.entrySet()) {
-            UUID uuid = entry.getKey();
-            ChampionDisplayInfo info = entry.getValue();
-            Entity targetEntity = ((ClientWorldAccessor) client.world).getEntityManager().getLookup().get(uuid);
+            final ChampionDisplayInfo info = entry.getValue();
+
+            final UUID uuid = entry.getKey();
+            final Entity targetEntity = ((ClientWorldAccessor) client.world).getEntityManager().getLookup().get(uuid);
 
             final boolean cache = now - info.lastUpdate() > config.cacheServer;
             final boolean falseRaycast = !performRaycastPos(client, targetEntity, delta);

@@ -32,7 +32,7 @@ public class ShulkerBulletRendererMixin {
             )
     )
     private RenderLayer redirectGetLayer(ShulkerBulletEntityModel model, Identifier texture, ShulkerBulletEntity entity) {
-        IBullet bullet = (IBullet) entity;
+        final IBullet bullet = (IBullet) entity;
 
         if (bullet.champions$isArctic()) {
             return model.getLayer(ARCTIC_TEXTURE);
