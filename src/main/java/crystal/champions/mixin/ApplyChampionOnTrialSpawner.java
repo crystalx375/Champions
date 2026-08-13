@@ -24,7 +24,10 @@ public class ApplyChampionOnTrialSpawner {
             )
     )
     private boolean initChampionsOrPass(ServerWorld instance, Entity entity, Operation<Boolean> original) {
-        if (entity instanceof MobEntity mobEntity && canBeChampion(mobEntity) && mobEntity instanceof IChampions i) {
+        if (entity instanceof MobEntity mobEntity
+                && mobEntity instanceof IChampions i
+                && canBeChampion(mobEntity))
+        {
             final ChampionRank rank = ChampionRank.getRandomRank(mobEntity.getRandom());
             if (rank.tier() > 0) {
                 i.champions$setChampionTier(rank.tier());

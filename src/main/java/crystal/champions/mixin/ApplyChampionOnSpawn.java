@@ -19,9 +19,14 @@ public class ApplyChampionOnSpawn {
     @Inject(method = "initialize", at = @At("TAIL"))
     private void initChampionsOrPass(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         final MobEntity mobEntity = (MobEntity) (Object) this;
-        if (mobEntity instanceof IChampions i && canBeChampion(mobEntity)) {
+        if (spawnReason != SpawnReason.TRIAL_SPAWNER
+                && spawnReason != SpawnReason.SPAWNER
+                && canBeChampion(mobEntity)
+                && mobEntity instanceof IChampions i)
+        {
             final ChampionRank rank = ChampionRank.getRandomRank(mobEntity.getRandom());
-            if (rank.tier() > 0) {
+            if (rank.tier() > 0)
+            {
                 i.champions$setChampionTier(rank.tier());
                 prepareAttributes(mobEntity, rank);
                 i.champions$setAffixesString(prepareAffixes(rank));
